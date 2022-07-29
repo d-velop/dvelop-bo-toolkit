@@ -1,0 +1,38 @@
+{
+    "scriptName": "test_mssql_import",
+    "failOnError": true,
+
+    "deleteNonExistingEntities": true,
+    "importIntervalTime": 0,
+
+    "logDir": null,
+    "debugLog": true,
+    "deleteOldLogs": 30,
+
+    "baseUri": "https://<tenant>.d-velop.cloud",
+    "apiKey": "Set by the 'TestWrapperScript.ps1'!",
+    "modelName": "dataupload_script",
+    "modelIsStaged": false,
+    "entityPluralName": "generic_entity_type",
+    "entityKey": "primary_key",
+    "entityKeyType": "Int32",
+
+    "dbType": "MSSQL",
+    "user": "sa",
+    "password": "Set by the 'TestWrapperScript.ps1'!",
+    "query": "SELECT * FROM dataupload_script",
+    "dbServer": "localhost",
+    "databaseName": "dataupload_script",
+    "mapping": [
+        "primary_key = [int]$row.item('primary_key_different')",
+        "string = $row.item('string')",
+        "boolean = [bool]$row.item('boolean').ToString()",
+        "dateTimeOffset = $row.item('dateTimeOffset').ToString() ? ([dateTimeOffset]::parse($row.item('dateTimeOffset').ToString())).ToString('yyyy-MM-ddTHH:mm:ssZ') : $null",
+        "double = $row.item('double') ?? [convert]::ToDouble($row.item('double'))",
+        "guid = $row.item('guid')",
+        "int16 = $row.item('int16') ?? [convert]::ToInt16($row.item('int16'), 10)",
+        "int32 = $row.item('int32') ?? [convert]::ToInt32($row.item('int32'), 10)",
+        "int64 = $row.item('int64') ?? [convert]::ToInt64($row.item('int64'), 10)",
+        "date = $row.item('date').ToString() ? ([datetime]::parse($row.item('date').ToString())).ToString('yyyy-MM-dd') : $null"
+    ]
+}

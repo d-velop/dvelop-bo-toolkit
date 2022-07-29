@@ -1,0 +1,30 @@
+{
+    "scriptName": "import_suppliers_demo",
+    "failOnError": true,
+
+    "deleteNonExistingEntities": true,
+    "importIntervalTime": 600,
+
+    "logDir": "./Logs",
+    "debugLog": true,
+    "deleteOldLogs": 30,
+
+    "baseUri": "https://<tenant>.d-velop.cloud",
+    "apiKey": "Insert API key here!",
+    "modelName": "ERP_Data",
+    "modelIsStaged": false,
+    "entityPluralName": "Suppliers",
+    "entityKey": "SupplierNo",
+    "entityKeyType": "Int32",
+
+    "dbType": "Oracle",
+    "user": "admin",
+    "password": "123456789",
+    "query": "SELECT SupplierNo, Name, City FROM CO_Suppliers",
+    "dataSource": "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=<host>)(PORT=1521))(CONNECT_DATA = (SERVER=dedicated)(SERVICE_NAME=<Service_Name>)))",
+    "mapping": [
+        "SupplierNo = [int] $row.item('SupplierNo')",
+        "Name = $row.item('Name')",
+        "City = $row.item('City')"
+    ]
+}

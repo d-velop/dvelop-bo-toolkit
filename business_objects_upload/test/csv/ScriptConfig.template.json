@@ -1,0 +1,48 @@
+{
+    "scriptName": "test_csv_import",
+    "failOnError": true,
+
+    "deleteNonExistingEntities": true,
+    "importIntervalTime": 0,
+
+    "logDir": null,
+    "debugLog": true,
+    "deleteOldLogs": 30,
+
+    "baseUri": "https://<tenant>.d-velop.cloud",
+    "apiKey": "Set by the 'TestWrapperScript.ps1'!",
+    "modelName": "dataupload_script",
+    "modelIsStaged": false,
+    "entityPluralName": "generic_entity_type",
+    "entityKey": "primary_key",
+    "entityKeyType": "Int32",
+
+    "dbType": "CSV",
+    "csvPath": "Set by the 'TestWrapperScript.ps1'!",
+    "csvHeader": [
+        "primary_key",
+        "string",
+        "boolean",
+        "dateTimeOffset",
+        "double",
+        "guid",
+        "int16",
+        "int32",
+        "int64",
+        "date"
+    ],
+    "csvFileDelimiter": ";",
+
+    "mapping": [
+        "primary_key = [int]$row.primary_key",
+        "string = $row.string",
+        "boolean = [bool]$row.boolean",
+        "dateTimeOffset = if($row.dateTimeOffset) {([dateTimeOffset]::parse($row.dateTimeOffset)).ToString('yyyy-MM-ddTHH:mm:ssZ')} else {$null}",
+        "double = if($row.double) {[convert]::ToDouble($row.double)} else {$null}",
+        "guid = if($row.guid) {$row.guid} else {$null}",
+        "int16 = if($row.int16) {[convert]::ToInt16($row.int16, 10)} else {$null}",
+        "int32 = if($row.int32) {[convert]::ToInt32($row.int32, 10)} else {$null}",
+        "int64 = if($row.int64) {[convert]::ToInt64($row.int64, 10)} else {$null}",
+        "date = if($row.date) {([datetime]::parse($row.date)).ToString('yyyy-MM-dd')} else {$null}"
+    ]
+}

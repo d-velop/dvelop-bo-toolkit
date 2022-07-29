@@ -1,0 +1,33 @@
+{
+    "scriptName": "import_suppliers_demo",
+    "failOnError": true,
+
+    "deleteNonExistingEntities": true,
+    "importIntervalTime": 600,
+
+    "logDir": "./",
+    "debugLog": true,
+    "deleteOldLogs": 30,
+
+    "baseUri": "https://<tenant>.d-velop.cloud",
+    "apiKey": "Insert API key here!",
+    "modelName": "ERP_Data",
+    "modelIsStaged": false,
+    "entityPluralName": "Suppliers",
+    "entityKey": "SupplierNo",
+    "entityKeyType": "Int32",
+
+    "dbType": "CSV",
+    "csvPath": "./supplier.csv",
+    "csvHeader": [
+        "SupplierNo",
+        "Name",
+        "City"
+    ],
+    "csvFileDelimiter": ";",
+    "mapping": [
+        "SupplierNo = [int]$row.SupplierNo",
+        "Name = $row.Name",
+        "City = $row.City"
+    ]
+}

@@ -1,0 +1,110 @@
+# Triggered on push only.
+# This workflow is for the development, when a new commit/tag/... is pushed the latest version for that branch is tested against the 'test' bo environment.
+name: Test data upload script
+on:
+  push:
+
+jobs:
+
+  # Short test on windows using PS7
+  integration_test_short_windows_ps7:
+    name: Short, Windows, PS7
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Status
+        run: |
+          echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+          echo "The ${{ github.repository }} repository has been cloned to the runner."
+          echo "The workflow is now ready to test your code on the runner."
+      - name: Execute test
+        shell: pwsh
+        run: |
+          echo "Test CSV import"
+          ./business_objects_upload/test/TestWrapperScript.ps1 -short -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
+
+
+  # Short test on windows using PS5
+  integration_test_short_windows_ps5:
+    name: Short, Windows, PS5'
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Status
+        run: |
+          echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+          echo "The ${{ github.repository }} repository has been cloned to the runner."
+          echo "The workflow is now ready to test your code on the runner."
+      - name: Execute test
+        shell: powershell
+        run: |
+          echo "Test CSV import"
+          ./business_objects_upload/test/TestWrapperScript.ps1 -short -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
+
+  # Short test on ubuntu using PS7 and a mssql data source
+  integration_test_short_ubuntu_ps7_mssql:
+    name: Short, Ubuntu, PS7, mssql data source
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Status
+        run: |
+          echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+          echo "The ${{ github.repository }} repository has been cloned to the runner."
+          echo "The workflow is now ready to test your code on the runner."
+      - name: Execute test
+        shell: pwsh
+        run: |
+          echo "Test MSSQL import"
+          ./.github/workflows/setup-mssql-db.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }}
+          ./business_objects_upload/test/TestWrapperScript.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }} -dbType mssql -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/mssql/ScriptConfig.template.json
+
+
+  # Long test on ubuntu using PS7
+  integration_test_long_ubuntu_ps7:
+    name: Long, Ubuntu, PS7
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Status
+        run: |
+          echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+          echo "The ${{ github.repository }} repository has been cloned to the runner."
+          echo "The workflow is now ready to test your code on the runner."
+      - name: Execute test
+        shell: pwsh
+        run: |
+          echo "Test CSV import"
+          ./business_objects_upload/test/TestWrapperScript.ps1 -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
+
+
+  release:
+    name: Release
+    needs: [integration_test_long_ubuntu_ps7, integration_test_short_windows_ps5, integration_test_short_windows_ps7, integration_test_short_ubuntu_ps7_mssql]
+    runs-on: ubuntu-20.04
+    # Only run this job when a tag is pushed that starts with a 'v'
+    # Goal is to refactor this job into another workflow. But that is not supported in the moment.
+    # See: https://stackoverflow.com/questions/65324440/github-actions-using-workflow-run-based-on-new-tags
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 17.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 17.x
+      - name: Install dependencies
+        run: sudo npm i md-to-pdf
+      - name: Convert markdown to pdf
+        run: |
+            sudo chmod +x ./.github/workflows/md_to_pdf.sh
+            ./.github/workflows/md_to_pdf.sh '${{ github.ref_name }}'
+      - name: Create release zip
+        run: |
+            sudo chmod +x ./.github/workflows/create-release.sh
+            ./.github/workflows/create-release.sh ${{ github.event.repository.name }} ${{ github.ref_name }}
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts:
+            ${{ github.event.repository.name }}-release-${{ github.ref_name }}.zip
+          token: ${{ secrets.GITHUB_TOKEN }}

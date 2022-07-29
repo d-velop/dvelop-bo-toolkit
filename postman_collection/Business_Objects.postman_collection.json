@@ -1,0 +1,5136 @@
+{
+	"info": {
+		"_postman_id": "be4e2741-8b28-4685-803b-88fed06a9041",
+		"name": "Business Objects Release",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Quick start",
+			"item": [
+				{
+					"name": "create new element",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"type": "text",
+								"value": "{{baseUri}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Property1\": 100001,\n    \"Property2\": \"string\",\n    \"Property3\": \"string 2\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUri}}/businessobjects/custom/{{modelName}}/{{entityPluralName}}",
+							"host": [
+								"{{baseUri}}"
+							],
+							"path": [
+								"businessobjects",
+								"custom",
+								"{{modelName}}",
+								"{{entityPluralName}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query all elements",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"value": "{{baseUri}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUri}}/businessobjects/custom/{{modelName}}/{{entityPluralName}}",
+							"host": [
+								"{{baseUri}}"
+							],
+							"path": [
+								"businessobjects",
+								"custom",
+								"{{modelName}}",
+								"{{entityPluralName}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete one element",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Origin",
+								"type": "text",
+								"value": "{{baseUri}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUri}}/businessobjects/custom/{{modelName}}/{{entityPluralName}}(100001)",
+							"host": [
+								"{{baseUri}}"
+							],
+							"path": [
+								"businessobjects",
+								"custom",
+								"{{modelName}}",
+								"{{entityPluralName}}(100001)"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Model configuration",
+			"item": [
+				{
+					"name": "Routine",
+					"item": [
+						{
+							"name": "new model erp data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    postman.setEnvironmentVariable(\"modelId\", jsonData.id);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"ERP_Data\",\r\n    \"description\": \"\",\r\n    \"entityTypes\": []\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"core",
+										"models",
+										"CustomModels"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new model erp data",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"ERP_Data\",\r\n    \"description\": \"\",\r\n    \"entitytypes\": []\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/core/models/CustomModels(f85fc379-e01e-41f2-af88-5d02a5d97b45)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels/$entity\",\n    \"name\": \"ERP_Data\",\n    \"state\": \"Initial\",\n    \"Id\": \"f85fc379-e01e-41f2-af88-5d02a5d97b45\",\n    \"description\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "new entity type supplier",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {\r",
+											"    var jsonData = JSON.parse(responseBody);\r",
+											"    postman.setEnvironmentVariable(\"supplierId\", jsonData.id);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Supplier\",\r\n    \"pluralName\": \"Suppliers\",\r\n    \"description\": \"supplier entity type\",\r\n    \"key\": {\r\n        \"name\": \"SupplierNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"Name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"City\",\r\n            \"type\": \"string\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"core",
+										"models",
+										"CustomModels({{modelId}})",
+										"entitytypes"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new entity type supplier",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Supplier\",\r\n    \"pluralName\": \"Suppliers\",\r\n    \"description\": \"supplier entity type\",\r\n    \"key\": {\r\n        \"name\": \"SupplierNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"City\",\r\n            \"type\": \"string\"\r\n        }\r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 11 Sep 2020 19:15:54 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/core/models/CustomModels(f85fc379-e01e-41f2-af88-5d02a5d97b45)%2Fentitytypes(9bdb5a57-af8a-4658-961a-a4847f7a923c)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(f85fc379-e01e-41f2-af88-5d02a5d97b45)/entitytypes/$entity\",\n    \"name\": \"Supplier\",\n    \"pluralName\": \"Suppliers\",\n    \"Id\": \"9bdb5a57-af8a-4658-961a-a4847f7a923c\",\n    \"description\": \"supplier entity type\"\n}"
+								}
+							]
+						},
+						{
+							"name": "new entity type customer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Customer\",\r\n    \"pluralName\": \"Customers\",\r\n    \"description\": \"customer entity type\",\r\n    \"key\": {\r\n        \"name\": \"CustomerNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"Name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"Country\",\r\n            \"type\": \"string\"\r\n        },\r\n        {\r\n            \"name\": \"ContactPersons\",\r\n            \"type\": \"list<string>\",\r\n            \"required\": \"false\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"core",
+										"models",
+										"CustomModels({{modelId}})",
+										"entitytypes"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new entity type customer",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Customer\",\r\n    \"pluralName\": \"Customers\",\r\n    \"description\": \"customer entity type\",\r\n    \"key\": {\r\n        \"name\": \"CustomerNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"Country\",\r\n            \"type\": \"string\"\r\n        },\r\n        {\r\n            \"name\": \"ContactPersons\",\r\n            \"type\": \"list<string>\",\r\n            \"required\": \"false\"\r\n        }\r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 12:38:48 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/core/models/CustomModels(f85fc379-e01e-41f2-af88-5d02a5d97b45)%2Fentitytypes(7edd2c41-ccfa-4814-b64a-5c2517ff2ce2)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(f85fc379-e01e-41f2-af88-5d02a5d97b45)/entitytypes/$entity\",\n    \"name\": \"Customer\",\n    \"pluralName\": \"Customers\",\n    \"Id\": \"7edd2c41-ccfa-4814-b64a-5c2517ff2ce2\",\n    \"description\": \"customer entity type\"\n}"
+								}
+							]
+						},
+						{
+							"name": "model erp data state = staged",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"state\": \"staged\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"core",
+										"models",
+										"CustomModels({{modelId}})"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "model erp data state = staged",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"state\": \"staged\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 12:39:14 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "model erp data state = published",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"state\": \"published\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"core",
+										"models",
+										"CustomModels({{modelId}})"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "model erp data state = published",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"state\": \"published\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 12:39:38 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					],
+					"description": "Execute the requests from top to bottom to create the model and entity types."
+				},
+				{
+					"name": "Templates & Examples",
+					"item": [
+						{
+							"name": "Customer (Entity type)",
+							"item": [
+								{
+									"name": "new entity type customer",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Customer\",\r\n    \"pluralName\": \"Customers\",\r\n    \"description\": \"customer entity type\",\r\n    \"key\": {\r\n        \"name\": \"CustomerNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"Name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"Country\",\r\n            \"type\": \"string\"\r\n        },\r\n        {\r\n            \"name\": \"ContactPersons\",\r\n            \"type\": \"list<string>\",\r\n            \"required\": \"false\"\r\n        }\r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "new entity type customer",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"Customer\",\r\n    \"pluralName\": \"Customers\",\r\n    \"description\": \"customer entity type\",\r\n    \"key\": {\r\n        \"name\": \"CustomerNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"Country\",\r\n            \"type\": \"string\"\r\n        },\r\n        {\r\n            \"name\": \"ContactPersons\",\r\n            \"type\": \"list<string>\",\r\n            \"required\": \"false\"\r\n        }\r\n    ]\r\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})",
+														"entitytypes"
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 13:09:41 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Location",
+													"value": "https://tutorial.d-velop.cloud/businessobjects/core/models/CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)%2Fentitytypes(12cd322f-bce8-403f-a031-ccb5d4480ef7)/"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)/entitytypes/$entity\",\n    \"name\": \"Customer\",\n    \"pluralName\": \"Customers\",\n    \"Id\": \"12cd322f-bce8-403f-a031-ccb5d4480ef7\",\n    \"description\": \"customer entity type\"\n}"
+										}
+									]
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "Supplier (Entity type)",
+							"item": [
+								{
+									"name": "new entity type supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code === 201) {\r",
+													"    var jsonData = JSON.parse(responseBody);\r",
+													"    postman.setEnvironmentVariable(\"supplierId\", jsonData.id);\r",
+													"}"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Supplier\",\r\n    \"pluralName\": \"Suppliers\",\r\n    \"description\": \"supplier entity type\",\r\n    \"key\": {\r\n        \"name\": \"SupplierNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"Name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"City\",\r\n            \"type\": \"string\"\r\n        }\r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "new entity type supplier",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"Supplier\",\r\n    \"pluralName\": \"Suppliers\",\r\n    \"description\": \"supplier entity type\",\r\n    \"key\": {\r\n        \"name\": \"SupplierNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"City\",\r\n            \"type\": \"string\"\r\n        }\r\n    ]\r\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})",
+														"entitytypes"
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 13:09:58 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Location",
+													"value": "https://tutorial.d-velop.cloud/businessobjects/core/models/CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)%2Fentitytypes(ae74e854-96bc-4b0b-88e3-b811aaaf8a8c)/"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)/entitytypes/$entity\",\n    \"name\": \"Supplier\",\n    \"pluralName\": \"Suppliers\",\n    \"Id\": \"ae74e854-96bc-4b0b-88e3-b811aaaf8a8c\",\n    \"description\": \"supplier entity type\"\n}"
+										}
+									]
+								},
+								{
+									"name": "new property in entity type supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Contact\",\r\n    \"type\": \"string\",\r\n    \"required\": \"false\"\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})/properties",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes({{supplierId}})",
+												"properties"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "new property in entity type supplier",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"Contact\",\r\n    \"type\": \"string\",\r\n    \"required\": \"false\"   \r\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})/properties",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})",
+														"entitytypes({{supplierId}})",
+														"properties"
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 13:10:05 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Location",
+													"value": "https://tutorial.d-velop.cloud/businessobjects/core/models/CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)%2Fentitytypes(ae74e854-96bc-4b0b-88e3-b811aaaf8a8c)%2Fproperties(dca80148-7598-4066-a7eb-b0a4944487b3)/"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)/entitytypes(ae74e854-96bc-4b0b-88e3-b811aaaf8a8c)/properties/$entity\",\n    \"required\": false,\n    \"name\": \"Contact\",\n    \"Id\": \"dca80148-7598-4066-a7eb-b0a4944487b3\",\n    \"type\": \"string\"\n}"
+										}
+									]
+								},
+								{
+									"name": "entity type supplier",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes({{supplierId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "entity type supplier",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})",
+														"entitytypes({{supplierId}})"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:07:34 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)/entitytypes(key(),properties())/$entity\",\n    \"name\": \"Supplier\",\n    \"pluralName\": \"Suppliers\",\n    \"Id\": \"ae74e854-96bc-4b0b-88e3-b811aaaf8a8c\",\n    \"description\": \"supplier entity type\",\n    \"state\": \"Initial\",\n    \"key\": {\n        \"name\": \"SupplierNo\",\n        \"Id\": \"a6584c4e-df81-4897-a029-ac34255d212c\",\n        \"type\": \"int32\",\n        \"state\": \"Initial\"\n    },\n    \"properties\": [\n        {\n            \"required\": true,\n            \"name\": \"name\",\n            \"Id\": \"c68bf93f-ef43-46eb-ac1a-eea8f4d365a0\",\n            \"type\": \"string\",\n            \"state\": \"Initial\"\n        },\n        {\n            \"name\": \"City\",\n            \"Id\": \"bddaa4cc-93c8-41c6-89f3-c3760ddac894\",\n            \"type\": \"string\",\n            \"state\": \"Initial\"\n        },\n        {\n            \"required\": false,\n            \"name\": \"Contact\",\n            \"Id\": \"dca80148-7598-4066-a7eb-b0a4944487b3\",\n            \"type\": \"string\",\n            \"state\": \"Initial\"\n        }\n    ]\n}"
+										}
+									]
+								},
+								{
+									"name": "entity type supplier",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes({{supplierId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "entity type supplier",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"Supplier\",\r\n    \"pluralName\": \"Suppliers\",\r\n    \"description\": \"supplier entity type\",\r\n    \"key\": {\r\n        \"name\": \"SupplierNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"City\",\r\n            \"type\": \"string\"\r\n        }\r\n    ]\r\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})",
+														"entitytypes({{supplierId}})"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:28:46 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(fe8dbe17-f19b-4fa7-ab85-b3282203ec3e)/entitytypes/$entity\",\n    \"id\": \"99fd532d-78cc-45ed-9497-77d73e307f9c\",\n    \"name\": \"ERP_Data\",\n    \"state\": \"published\",\n    \"description\": \"\"\n}"
+										}
+									]
+								},
+								{
+									"name": "entity type supplier",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Supplier\",\r\n    \"pluralName\": \"Suppliers\",\r\n    \"description\": \"supplier entity type\",\r\n    \"key\": {\r\n        \"name\": \"SupplierNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"Name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"City\",\r\n            \"type\": \"string\"\r\n        },\r\n        {\r\n            \"name\": \"Contact\",\r\n            \"type\": \"string\",\r\n            \"required\": \"false\"   \r\n        }        \r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes({{supplierId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "entity type supplier",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"Supplier\",\r\n    \"pluralName\": \"Suppliers\",\r\n    \"description\": \"supplier entity type\",\r\n    \"key\": {\r\n        \"name\": \"SupplierNo\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"name\",\r\n            \"type\": \"string\",\r\n            \"required\": \"true\"\r\n        },\r\n        {\r\n            \"name\": \"City\",\r\n            \"type\": \"string\"\r\n        },\r\n        {\r\n            \"name\": \"Contact\",\r\n            \"type\": \"string\",\r\n            \"required\": \"false\"   \r\n        }        \r\n    ]\r\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes({{supplierId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})",
+														"entitytypes({{supplierId}})"
+													]
+												}
+											},
+											"status": "No Content",
+											"code": 204,
+											"_postman_previewlanguage": "plain",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Mon, 07 Feb 2022 16:32:16 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "*"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": null
+										}
+									]
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "ERP Data (Model)",
+							"item": [
+								{
+									"name": "get all models",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "get all models",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 13:11:28 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(entitytypes(key(),properties()))\",\n    \"value\": [\n        {\n            \"name\": \"ERP_Data\",\n            \"state\": \"Initial\",\n            \"Id\": \"c1d55276-425e-412a-887f-8c498f34fd66\",\n            \"description\": \"\",\n            \"entitytypes\": [\n                {\n                    \"name\": \"Customer\",\n                    \"pluralName\": \"Customers\",\n                    \"Id\": \"12cd322f-bce8-403f-a031-ccb5d4480ef7\",\n                    \"description\": \"customer entity type\",\n                    \"state\": \"Initial\",\n                    \"key\": {\n                        \"name\": \"CustomerNo\",\n                        \"Id\": \"f071a4f9-4f18-41de-a108-6eebea23185c\",\n                        \"type\": \"int32\",\n                        \"state\": \"Initial\"\n                    },\n                    \"properties\": [\n                        {\n                            \"required\": true,\n                            \"name\": \"name\",\n                            \"Id\": \"023de2d0-4da5-4bb2-b58c-5c8175a82be0\",\n                            \"type\": \"string\",\n                            \"state\": \"Initial\"\n                        },\n                        {\n                            \"name\": \"Country\",\n                            \"Id\": \"eda95d4d-b542-4196-90cc-fcfcbef15a4e\",\n                            \"type\": \"string\",\n                            \"state\": \"Initial\"\n                        },\n                        {\n                            \"required\": false,\n                            \"name\": \"ContactPersons\",\n                            \"Id\": \"a50501f8-2810-4218-a6b9-d7f8ef390f05\",\n                            \"type\": \"list<string>\",\n                            \"state\": \"Initial\"\n                        }\n                    ]\n                },\n                {\n                    \"name\": \"Supplier\",\n                    \"pluralName\": \"Suppliers\",\n                    \"Id\": \"ae74e854-96bc-4b0b-88e3-b811aaaf8a8c\",\n                    \"description\": \"supplier entity type\",\n                    \"state\": \"Initial\",\n                    \"key\": {\n                        \"name\": \"SupplierNo\",\n                        \"Id\": \"a6584c4e-df81-4897-a029-ac34255d212c\",\n                        \"type\": \"int32\",\n                        \"state\": \"Initial\"\n                    },\n                    \"properties\": [\n                        {\n                            \"required\": true,\n                            \"name\": \"name\",\n                            \"Id\": \"c68bf93f-ef43-46eb-ac1a-eea8f4d365a0\",\n                            \"type\": \"string\",\n                            \"state\": \"Initial\"\n                        },\n                        {\n                            \"name\": \"City\",\n                            \"Id\": \"bddaa4cc-93c8-41c6-89f3-c3760ddac894\",\n                            \"type\": \"string\",\n                            \"state\": \"Initial\"\n                        },\n                        {\n                            \"required\": false,\n                            \"name\": \"Contact\",\n                            \"Id\": \"dca80148-7598-4066-a7eb-b0a4944487b3\",\n                            \"type\": \"string\",\n                            \"state\": \"Initial\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}"
+										}
+									]
+								},
+								{
+									"name": "new model erp data",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code === 201) {\r",
+													"    var jsonData = JSON.parse(responseBody);\r",
+													"    postman.setEnvironmentVariable(\"modelId\", jsonData.id);\r",
+													"}"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"ERP_Data\",\r\n    \"description\": \"\",\r\n    \"entityTypes\": []\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "new model erp data",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"ERP_Data\",\r\n    \"description\": \"\",\r\n    \"entitytypes\": []\r\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels"
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:24:29 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Location",
+													"value": "https://tutorial.d-velop.cloud/businessobjects/core/models/CustomModels(8cdde394-8075-456f-87ef-68901ce34d44)/"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels/$entity\",\n    \"name\": \"ERP_Data\",\n    \"state\": \"Initial\",\n    \"Id\": \"8cdde394-8075-456f-87ef-68901ce34d44\",\n    \"description\": \"\"\n}"
+										}
+									]
+								},
+								{
+									"name": "new model erp data with entity types - published",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"if (pm.response.code === 201) {\r",
+													"    var jsonData = JSON.parse(responseBody);\r",
+													"    postman.setEnvironmentVariable(\"modelId\", jsonData.id);\r",
+													"\r",
+													"    // Send request to get supplier id\r",
+													"    //{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes\r",
+													"    pm.sendRequest(`${postman.getEnvironmentVariable(\"baseUri\")}/businessobjects/core/models/CustomModels(${postman.getEnvironmentVariable(\"modelId\")})/entitytypes`, function (err, response) {\r",
+													"        if(response.code === 200) {\r",
+													"            var jsonData = response.json();\r",
+													"            var supplier = jsonData.value.find(entity => entity.name === \"Supplier\")\r",
+													"            postman.setEnvironmentVariable(\"supplierId\", supplier.id);\r",
+													"        }\r",
+													"    });\r",
+													"}"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"ERP_Data\",\r\n    \"description\": \"\",\r\n    \"state\": \"published\",\r\n    \"entityTypes\": [\r\n        {\r\n            \"name\": \"Supplier\",\r\n            \"pluralName\": \"Suppliers\",\r\n            \"description\": \"supplier entity type\",\r\n            \"key\": {\r\n                \"name\": \"SupplierNo\",\r\n                \"type\": \"int32\"\r\n            },\r\n            \"properties\": [\r\n                {\r\n                    \"name\": \"Name\",\r\n                    \"type\": \"string\",\r\n                    \"required\": true\r\n                },\r\n                {\r\n                    \"name\": \"City\",\r\n                    \"type\": \"string\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"name\": \"Customer\",\r\n            \"pluralName\": \"Customers\",\r\n            \"description\": \"customer entity type\",\r\n            \"key\": {\r\n                \"name\": \"CustomerNo\",\r\n                \"type\": \"int32\"\r\n            },\r\n            \"properties\": [\r\n                {\r\n                    \"name\": \"Name\",\r\n                    \"type\": \"string\",\r\n                    \"required\": \"true\"\r\n                },\r\n                {\r\n                    \"name\": \"Country\",\r\n                    \"type\": \"string\"\r\n                },\r\n                {\r\n                \t\"name\": \"ContactPersons\",\r\n                    \"type\": \"list<string>\",\r\n                    \"required\": \"false\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "new model erp data with entity types - published",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"name\": \"ERP_Data\",\r\n    \"description\": \"\",\r\n    \"state\": \"published\",\r\n    \"entityTypes\": [\r\n        {\r\n            \"name\": \"Supplier\",\r\n            \"pluralName\": \"Suppliers\",\r\n            \"description\": \"supplier entity type\",\r\n            \"key\": {\r\n                \"name\": \"SupplierNo\",\r\n                \"type\": \"int32\"\r\n            },\r\n            \"properties\": [\r\n                {\r\n                    \"name\": \"Name\",\r\n                    \"type\": \"string\",\r\n                    \"required\": true\r\n                },\r\n                {\r\n                    \"name\": \"City\",\r\n                    \"type\": \"string\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"name\": \"Customer\",\r\n            \"pluralName\": \"Customers\",\r\n            \"description\": \"customer entity type\",\r\n            \"key\": {\r\n                \"name\": \"CustomerNo\",\r\n                \"type\": \"int32\"\r\n            },\r\n            \"properties\": [\r\n                {\r\n                    \"name\": \"name\",\r\n                    \"type\": \"string\",\r\n                    \"required\": \"true\"\r\n                },\r\n                {\r\n                    \"name\": \"Country\",\r\n                    \"type\": \"string\"\r\n                },\r\n                {\r\n                \t\"name\": \"ContactPersons\",\r\n                    \"type\": \"list<string>\",\r\n                    \"required\": \"false\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels"
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Mon, 07 Feb 2022 15:24:41 GMT"
+												},
+												{
+													"key": "Content-Type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "br"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Location",
+													"value": "http://localhost:5000/businessobjects/core/models/customModels(1096ff44-d8e8-4948-809c-8bf3bb5d7328)/"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "*"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#customModels/$entity\",\n    \"id\": \"1096ff44-d8e8-4948-809c-8bf3bb5d7328\",\n    \"name\": \"ERP_Data\",\n    \"state\": \"published\",\n    \"description\": \"\"\n}"
+										}
+									]
+								},
+								{
+									"name": "model erp data",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "model erp data",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 13:12:33 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(entitytypes(key(),properties()))/$entity\",\n    \"name\": \"ERP_Data\",\n    \"state\": \"Initial\",\n    \"Id\": \"c1d55276-425e-412a-887f-8c498f34fd66\",\n    \"description\": \"\",\n    \"entitytypes\": [\n        {\n            \"name\": \"Customer\",\n            \"pluralName\": \"Customers\",\n            \"Id\": \"12cd322f-bce8-403f-a031-ccb5d4480ef7\",\n            \"description\": \"customer entity type\",\n            \"state\": \"Initial\",\n            \"key\": {\n                \"name\": \"CustomerNo\",\n                \"Id\": \"f071a4f9-4f18-41de-a108-6eebea23185c\",\n                \"type\": \"int32\",\n                \"state\": \"Initial\"\n            },\n            \"properties\": [\n                {\n                    \"required\": true,\n                    \"name\": \"name\",\n                    \"Id\": \"023de2d0-4da5-4bb2-b58c-5c8175a82be0\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"name\": \"Country\",\n                    \"Id\": \"eda95d4d-b542-4196-90cc-fcfcbef15a4e\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"required\": false,\n                    \"name\": \"ContactPersons\",\n                    \"Id\": \"a50501f8-2810-4218-a6b9-d7f8ef390f05\",\n                    \"type\": \"list<string>\",\n                    \"state\": \"Initial\"\n                }\n            ]\n        },\n        {\n            \"name\": \"Supplier\",\n            \"pluralName\": \"Suppliers\",\n            \"Id\": \"ae74e854-96bc-4b0b-88e3-b811aaaf8a8c\",\n            \"description\": \"supplier entity type\",\n            \"state\": \"Initial\",\n            \"key\": {\n                \"name\": \"SupplierNo\",\n                \"Id\": \"a6584c4e-df81-4897-a029-ac34255d212c\",\n                \"type\": \"int32\",\n                \"state\": \"Initial\"\n            },\n            \"properties\": [\n                {\n                    \"required\": true,\n                    \"name\": \"name\",\n                    \"Id\": \"c68bf93f-ef43-46eb-ac1a-eea8f4d365a0\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"name\": \"City\",\n                    \"Id\": \"bddaa4cc-93c8-41c6-89f3-c3760ddac894\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"required\": false,\n                    \"name\": \"Contact\",\n                    \"Id\": \"dca80148-7598-4066-a7eb-b0a4944487b3\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                }\n            ]\n        }\n    ]\n}"
+										}
+									]
+								},
+								{
+									"name": "model erp data",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"ERP_Data\",\n    \"description\": \"ERP system data models\",\n    \"state\": \"published\",\n    \"entityTypes\": [\n        {\n            \"name\": \"Supplier\",\n            \"pluralName\": \"Suppliers\",\n            \"description\": \"supplier entity type\",\n            \"key\": {\n                \"name\": \"SupplierNo\",\n                \"type\": \"int32\"\n            },\n            \"properties\": [\n                {\n                    \"name\": \"Name\",\n                    \"type\": \"string\",\n                    \"required\": \"true\"\n                },\n                {\n                    \"name\": \"City\",\n                    \"type\": \"string\"\n                }\n            ]\n        },\n        {\n            \"name\": \"Customer\",\n            \"pluralName\": \"Customers\",\n            \"description\": \"customer entity type\",\n            \"key\": {\n                \"name\": \"CustomerNo\",\n                \"type\": \"int32\"\n            },\n            \"properties\": [\n                {\n                    \"name\": \"Name\",\n                    \"type\": \"string\",\n                    \"required\": \"true\"\n                },\n                {\n                    \"name\": \"Country\",\n                    \"type\": \"string\"\n                },\n                {\n                \t\"name\": \"ContactPersons\",\n                    \"type\": \"list<string>\",\n                    \"required\": \"false\"\n                }\n            ]\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "model erp data",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"name\": \"ERP_Data\",\n    \"description\": \"ERP system data models\",\n    \"state\": \"published\",\n    \"entitytypes\": [\n        {\n            \"name\": \"Supplier\",\n            \"pluralName\": \"Suppliers\",\n            \"description\": \"supplier entity type\",\n            \"key\": {\n                \"name\": \"SupplierNo\",\n                \"type\": \"int32\"\n            },\n            \"properties\": [\n                {\n                    \"name\": \"name\",\n                    \"type\": \"string\",\n                    \"required\": \"true\"\n                },\n                {\n                    \"name\": \"City\",\n                    \"type\": \"string\"\n                }\n            ]\n        },\n        {\n            \"name\": \"Customer\",\n            \"pluralName\": \"Customers\",\n            \"description\": \"customer entity type\",\n            \"key\": {\n                \"name\": \"CustomerNo\",\n                \"type\": \"int32\"\n            },\n            \"properties\": [\n                {\n                    \"name\": \"name\",\n                    \"type\": \"string\",\n                    \"required\": \"true\"\n                },\n                {\n                    \"name\": \"Country\",\n                    \"type\": \"string\"\n                },\n                {\n                \t\"name\": \"ContactPersons\",\n                    \"type\": \"list<string>\",\n                    \"required\": \"false\"\n                }\n            ]\n        }\n    ]\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})"
+													]
+												}
+											},
+											"status": "No Content",
+											"code": 204,
+											"_postman_previewlanguage": "plain",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:25:51 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "model erp data patch description",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"ERP_Data\",\n    \"description\": \"ERP system data models\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "model erp data",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"name\": \"ERP_Data\",\n    \"description\": \"ERP system data models\"\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})"
+													]
+												}
+											},
+											"status": "No Content",
+											"code": 204,
+											"_postman_previewlanguage": "plain",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 13:13:39 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "model erp data state = staged",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"state\": \"staged\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "model erp data state = staged",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"state\": \"staged\"\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})"
+													]
+												}
+											},
+											"status": "No Content",
+											"code": 204,
+											"_postman_previewlanguage": "plain",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:10:33 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "model erp data state = published",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"state\": \"published\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "model erp data state = published",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n    \"state\": \"published\"\n}"
+												},
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})"
+													]
+												}
+											},
+											"status": "No Content",
+											"code": 204,
+											"_postman_previewlanguage": "plain",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:11:30 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								},
+								{
+									"name": "model erp data",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "model erp data",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:23:53 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels/$entity\",\n    \"name\": \"ERP_Data\",\n    \"state\": \"published\",\n    \"Id\": \"c1d55276-425e-412a-887f-8c498f34fd66\",\n    \"description\": \"ERP system data models\"\n}"
+										}
+									]
+								},
+								{
+									"name": "all entity types in model erp data",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "all entity types in model erp data",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Content-type",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Origin",
+														"type": "text",
+														"value": "{{baseUri}}"
+													}
+												],
+												"url": {
+													"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+													"host": [
+														"{{baseUri}}"
+													],
+													"path": [
+														"businessobjects",
+														"core",
+														"models",
+														"CustomModels({{modelId}})",
+														"entitytypes"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sat, 12 Sep 2020 15:10:04 GMT"
+												},
+												{
+													"key": "Content-type",
+													"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+												},
+												{
+													"key": "Server",
+													"value": "Kestrel"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-cache"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												},
+												{
+													"key": "Content-Encoding",
+													"value": "gzip"
+												},
+												{
+													"key": "Expires",
+													"value": "-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Origin"
+												},
+												{
+													"key": "Vary",
+													"value": "accept"
+												},
+												{
+													"key": "Vary",
+													"value": "accept-language"
+												},
+												{
+													"key": "Vary",
+													"value": "x-dv-sig-1"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Access-Control-Allow-Credentials",
+													"value": "true"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "https://tutorial.d-velop.cloud"
+												},
+												{
+													"key": "OData-Version",
+													"value": "4.0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/core/models/$metadata#CustomModels(c1d55276-425e-412a-887f-8c498f34fd66)/entitytypes(key(),properties())\",\n    \"value\": [\n        {\n            \"name\": \"Customer\",\n            \"pluralName\": \"Customers\",\n            \"Id\": \"12cd322f-bce8-403f-a031-ccb5d4480ef7\",\n            \"description\": \"customer entity type\",\n            \"state\": \"Initial\",\n            \"key\": {\n                \"name\": \"CustomerNo\",\n                \"Id\": \"f071a4f9-4f18-41de-a108-6eebea23185c\",\n                \"type\": \"int32\",\n                \"state\": \"Initial\"\n            },\n            \"properties\": [\n                {\n                    \"required\": true,\n                    \"name\": \"name\",\n                    \"Id\": \"023de2d0-4da5-4bb2-b58c-5c8175a82be0\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"name\": \"Country\",\n                    \"Id\": \"eda95d4d-b542-4196-90cc-fcfcbef15a4e\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"required\": false,\n                    \"name\": \"ContactPersons\",\n                    \"Id\": \"a50501f8-2810-4218-a6b9-d7f8ef390f05\",\n                    \"type\": \"list<string>\",\n                    \"state\": \"Initial\"\n                }\n            ]\n        },\n        {\n            \"name\": \"Supplier\",\n            \"pluralName\": \"Suppliers\",\n            \"Id\": \"ae74e854-96bc-4b0b-88e3-b811aaaf8a8c\",\n            \"description\": \"supplier entity type\",\n            \"state\": \"Initial\",\n            \"key\": {\n                \"name\": \"SupplierNo\",\n                \"Id\": \"a6584c4e-df81-4897-a029-ac34255d212c\",\n                \"type\": \"int32\",\n                \"state\": \"Initial\"\n            },\n            \"properties\": [\n                {\n                    \"required\": true,\n                    \"name\": \"name\",\n                    \"Id\": \"c68bf93f-ef43-46eb-ac1a-eea8f4d365a0\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"name\": \"City\",\n                    \"Id\": \"bddaa4cc-93c8-41c6-89f3-c3760ddac894\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                },\n                {\n                    \"required\": false,\n                    \"name\": \"Contact\",\n                    \"Id\": \"dca80148-7598-4066-a7eb-b0a4944487b3\",\n                    \"type\": \"string\",\n                    \"state\": \"Initial\"\n                }\n            ]\n        }\n    ]\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Generic entity type (Entity type and Model)",
+							"item": [
+								{
+									"name": "new model dataupload_script with entity type generic entity type",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Not set env variable \"modelId\" or \"supplierId\" since this model and its entity types are not referenced in following requests."
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"dataupload_script\",\r\n    \"description\": \"\",\r\n    \"state\": \"published\",\r\n    \"entityTypes\": [\r\n        {\r\n            \"name\": \"generic_entity_type\",\r\n            \"pluralName\": \"generic_entity_type\",\r\n            \"description\": \"A generic entity type that has all properties the powershell upload script supports\",\r\n            \"key\": {\r\n                \"name\": \"primary_key\",\r\n                \"type\": \"int32\"\r\n            },\r\n            \"properties\": [\r\n                {\r\n                    \"name\": \"string\",\r\n                    \"type\": \"string\",\r\n                    \"required\": true,\r\n                    \"indexed\": true\r\n                },\r\n                {\r\n                    \"name\": \"boolean\",\r\n                    \"type\": \"boolean\"\r\n                },\r\n                {\r\n                    \"name\": \"dateTimeOffset\",\r\n                    \"type\": \"dateTimeOffset\"\r\n                },\r\n                {\r\n                    \"name\": \"double\",\r\n                    \"type\": \"double\"\r\n                },\r\n                {\r\n                    \"name\": \"guid\",\r\n                    \"type\": \"guid\"\r\n                },\r\n                {\r\n                    \"name\": \"int16\",\r\n                    \"type\": \"int16\"\r\n                },\r\n                {\r\n                    \"name\": \"int32\",\r\n                    \"type\": \"int32\"\r\n                },\r\n                {\r\n                    \"name\": \"int64\",\r\n                    \"type\": \"int64\"\r\n                },\r\n                {\r\n                    \"name\": \"date\",\r\n                    \"type\": \"date\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "new entity type generic entity type",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Not set env variable \"modelId\" or \"supplierId\" since this model and its entity types are not referenced in following requests."
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"generic_entity_type\",\r\n    \"pluralName\": \"generic_entity_type\",\r\n    \"description\": \"A generic entity type that has all properties the powershell upload script supports\",\r\n    \"key\": {\r\n        \"name\": \"primary_key\",\r\n        \"type\": \"int32\"\r\n    },\r\n    \"properties\": [\r\n        {\r\n            \"name\": \"string\",\r\n            \"type\": \"string\",\r\n            \"required\": true,\r\n            \"indexed\": true\r\n        },\r\n        {\r\n            \"name\": \"boolean\",\r\n            \"type\": \"boolean\"\r\n        },\r\n        {\r\n            \"name\": \"dateTimeOffset\",\r\n            \"type\": \"dateTimeOffset\"\r\n        },\r\n        {\r\n            \"name\": \"double\",\r\n            \"type\": \"double\"\r\n        },\r\n        {\r\n            \"name\": \"guid\",\r\n            \"type\": \"guid\"\r\n        },\r\n        {\r\n            \"name\": \"int16\",\r\n            \"type\": \"int16\"\r\n        },\r\n        {\r\n            \"name\": \"int32\",\r\n            \"type\": \"int32\"\r\n        },\r\n        {\r\n            \"name\": \"int64\",\r\n            \"type\": \"int64\"\r\n        },\r\n        {\r\n            \"name\": \"date\",\r\n            \"type\": \"date\"\r\n        }\r\n    ]\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/models/CustomModels({{modelId}})/entitytypes",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"models",
+												"CustomModels({{modelId}})",
+												"entitytypes"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Data delivery and queries",
+			"item": [
+				{
+					"name": "Supplier",
+					"item": [
+						{
+							"name": "new supplier (Supplier GmbH) - state: staged",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"SupplierNo\": 100001,\n    \"Name\": \"Supplier GmbH\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data-staged/Suppliers",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data-staged",
+										"Suppliers"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new supplier (Supplier GmbH) - state: staged",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"SupplierNo\": 100001,\n    \"name\": \"Supplier GmbH\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data-staged/Suppliers",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data-staged",
+												"Suppliers"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:11:18 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data-staged/Suppliers(100001)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data-staged/$metadata#Suppliers/$entity\",\n    \"SupplierNo\": 100001,\n    \"name\": \"Supplier GmbH\"\n}"
+								}
+							]
+						},
+						{
+							"name": "new supplier (Supplier GmbH)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"SupplierNo\": 100001,\n    \"Name\": \"Supplier GmbH\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Suppliers",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Suppliers"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new supplier (Supplier GmbH)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"SupplierNo\": 100001,\n    \"name\": \"Supplier GmbH\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Suppliers",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Suppliers"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:11:57 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/Suppliers(100001)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/$metadata#Suppliers/$entity\",\n    \"SupplierNo\": 100001,\n    \"name\": \"Supplier GmbH\"\n}"
+								}
+							]
+						},
+						{
+							"name": "new supplier (Company Inc)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"SupplierNo\": 100003,\n    \"Name\": \"Company Inc\",\n    \"City\": \"San Francisco\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Suppliers",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Suppliers"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new supplier (Company Inc)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"SupplierNo\": 100003,\n    \"name\": \"Company Inc\",\n    \"City\": \"San Francisco\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Suppliers",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Suppliers"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:12:17 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/Suppliers(100003)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/$metadata#Suppliers/$entity\",\n    \"SupplierNo\": 100003,\n    \"name\": \"Company Inc\",\n    \"City\": \"San Francisco\"\n}"
+								}
+							]
+						},
+						{
+							"name": "update one supplier (Supplier GmbH)",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"SupplierNo\": 100001,\r\n    \"Name\": \"Supplier GmbH\",\r\n    \"City\": \"Berlin\"\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Suppliers(100001)",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Suppliers(100001)"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "update one supplier (Supplier GmbH)",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"SupplierNo\": 100001,\r\n    \"name\": \"Supplier GmbH\",\r\n    \"City\": \"Berlin\"\r\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Suppliers(100001)",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Suppliers(100001)"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:12:40 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "one supplier",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"value": "{{baseUri}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Suppliers(100001)",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Suppliers(100001)"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "one supplier",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"value": "{{baseUri}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Suppliers(100001)",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Suppliers(100001)"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:13:03 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/$metadata#Suppliers/$entity\",\n    \"SupplierNo\": 100001,\n    \"name\": \"Supplier GmbH\",\n    \"City\": \"Berlin\"\n}"
+								}
+							]
+						},
+						{
+							"name": "all suppliers",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"value": "{{baseUri}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Suppliers",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Suppliers"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "all suppliers",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"value": "{{baseUri}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Suppliers",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Suppliers"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:13:19 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/$metadata#Suppliers\",\n    \"value\": [\n        {\n            \"SupplierNo\": 100001,\n            \"name\": \"Supplier GmbH\",\n            \"City\": \"Berlin\"\n        },\n        {\n            \"SupplierNo\": 100003,\n            \"name\": \"Company Inc\",\n            \"City\": \"San Francisco\"\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "delete one supplier",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Suppliers(100001)",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Suppliers(100001)"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "delete one supplier",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Suppliers(100001)",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Suppliers(100001)"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:16:59 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/$metadata#Suppliers/$entity\",\n    \"SupplierNo\": 100001,\n    \"name\": \"Supplier GmbH\",\n    \"City\": \"Berlin\"\n}"
+								},
+								{
+									"name": "delete one supplier (no content)",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Suppliers(100001)",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Suppliers(100001)"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:17:19 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "new customer (Customer GmbH)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"CustomerNo\": 100001,\n    \"Name\": \"Customer GmbH\",\n    \"Country\": \"Deutschland\",\n    \"ContactPersons\": [ \"name 1\", \"name 2\" ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Customers",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Customers"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new customer (Customer GmbH)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"CustomerNo\": 100001,\n    \"name\": \"Customer GmbH\",\n    \"Country\": \"Deutschland\",\n    \"ContactPersons\": [ \"name 1\", \"name 2\" ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Customers",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Customers"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:16:25 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/Customers(100001)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/$metadata#Customers/$entity\",\n    \"CustomerNo\": 100001,\n    \"name\": \"Customer GmbH\",\n    \"Country\": \"Deutschland\",\n    \"ContactPersons\": [\n        \"name 1\",\n        \"name 2\"\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "new customer (d.velop AG)",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"CustomerNo\": 100002,\n    \"Name\": \"d.velop AG\",\n    \"Country\": \"Deutschland\",\n    \"ContactPersons\": [ \"Person 1\", \"Person 2\" ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/ERP_Data/Customers",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"ERP_Data",
+										"Customers"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "new customer (d.velop AG)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-type",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Origin",
+												"type": "text",
+												"value": "{{baseUri}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"CustomerNo\": 100002,\n    \"name\": \"d.velop AG\",\n    \"Country\": \"Deutschland\",\n    \"ContactPersons\": [ \"Person 1\", \"Person 2\" ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUri}}/businessobjects/core/ERP_Data/Customers",
+											"host": [
+												"{{baseUri}}"
+											],
+											"path": [
+												"businessobjects",
+												"core",
+												"ERP_Data",
+												"Customers"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 12 Sep 2020 15:16:35 GMT"
+										},
+										{
+											"key": "Content-type",
+											"value": "application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache"
+										},
+										{
+											"key": "Pragma",
+											"value": "no-cache"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Expires",
+											"value": "-1"
+										},
+										{
+											"key": "Location",
+											"value": "https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/Customers(100002)/"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Vary",
+											"value": "accept"
+										},
+										{
+											"key": "Vary",
+											"value": "accept-language"
+										},
+										{
+											"key": "Vary",
+											"value": "x-dv-sig-1"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "https://tutorial.d-velop.cloud"
+										},
+										{
+											"key": "OData-Version",
+											"value": "4.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"@odata.context\": \"https://tutorial.d-velop.cloud/businessobjects/odata/ERP_Data/$metadata#Customers/$entity\",\n    \"CustomerNo\": 100002,\n    \"name\": \"d.velop AG\",\n    \"Country\": \"Deutschland\",\n    \"ContactPersons\": [\n        \"Person 1\",\n        \"Person 2\"\n    ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Generic entity type",
+					"item": [
+						{
+							"name": "all generic entity type",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"value": "{{baseUri}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/dataupload_script/generic_entity_type",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"dataupload_script",
+										"generic_entity_type"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "new generic entity type",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"primary_key\": 1,\n    \"string\": \"This is a string\",\n    \"boolean\": true,\n    \"dateTimeOffset\": \"2020-04-30T17:15:00+02:00\",\n    \"double\": \"9999999.999\",\n    \"guid\": \"ac9d69fe-a9fd-4233-85db-52026687e5e3\",\n    \"int16\": 16,\n    \"int32\": 32,\n    \"int64\": 64,\n    \"date\": \"2020-12-31\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/dataupload_script/generic_entity_type",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"dataupload_script",
+										"generic_entity_type"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "new generic entity type Copy",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Origin",
+										"type": "text",
+										"value": "{{baseUri}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUri}}/businessobjects/custom/dataupload_script/generic_entity_type/42",
+									"host": [
+										"{{baseUri}}"
+									],
+									"path": [
+										"businessobjects",
+										"custom",
+										"dataupload_script",
+										"generic_entity_type",
+										"42"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{apiKey}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,31 @@
+# Top-most EditorConfig file
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = false
+
+# Source code
+[*.ps1]
+indent_size = 4
+
+# Shell scripts
+[*.sh]
+end_of_line = lf
+indent_size = 4
+
+# JSON
+[*.json]
+indent_size = 4
+
+# Data serialization
+[*.{yaml,yml}]
+indent_size = 2
+
+# Markdown
+[*.md]
+indent_size = 2

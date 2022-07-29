@@ -1,0 +1,25 @@
+# VS Code files
+.vscode
+
+# IDEA files
+.idea
+
+# Log file
+*.log
+
+
+# But do not ignore the template config
+!business_objects_upload/test/csv/ScriptConfig.template.json
+!business_objects_upload/test/mssql/ScriptConfig.template.json
+
+# Ignore pdf files
+*.pdf
+
+# Ignore npm related files and folders
+node_modules
+package-lock.json
+package.json
+
+# Ignore archives
+*.zip
+*.tar.gz
