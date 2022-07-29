@@ -61,8 +61,8 @@ jobs:
 
 
   # Long test on ubuntu using PS7
-  integration_test_long_ubuntu_ps7:
-    name: Long, Ubuntu, PS7
+  integration_test_long_ubuntu_ps7_batching:
+    name: Long, Ubuntu, PS7, batching enabled
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -78,9 +78,27 @@ jobs:
           ./business_objects_upload/test/TestWrapperScript.ps1 -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
 
 
+  # Long test on ubuntu using PS7
+  integration_test_long_ubuntu_ps7:
+    name: Long, Ubuntu, PS7, batching disabled
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Status
+        run: |
+          echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+          echo "The ${{ github.repository }} repository has been cloned to the runner."
+          echo "The workflow is now ready to test your code on the runner."
+      - name: Execute test
+        shell: pwsh
+        run: |
+          echo "Test CSV import"
+          ./business_objects_upload/test/TestWrapperScript.ps1 -noBatching -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
+
+
   release:
     name: Release
-    needs: [integration_test_long_ubuntu_ps7, integration_test_short_windows_ps5, integration_test_short_windows_ps7, integration_test_short_ubuntu_ps7_mssql]
+    needs: [integration_test_long_ubuntu_ps7, integration_test_short_windows_ps5, integration_test_short_windows_ps7, integration_test_short_ubuntu_ps7_mssql, integration_test_long_ubuntu_ps7_batching]
     runs-on: ubuntu-20.04
     # Only run this job when a tag is pushed that starts with a 'v'
     # Goal is to refactor this job into another workflow. But that is not supported in the moment.
