@@ -18,7 +18,7 @@ function ExitHelper {
 #
 # Version of this template.
 # Version is part of the  HTTP Header-Attributes "User-Agent" and is sent with every request.
-[String] $version = "1.0.0"
+[String] $version = "1.0.1"
 
 
 # Constructed User-agent value
@@ -131,7 +131,7 @@ function Main {
 
                 # Delete entities that do not exist in the data source but in business objects
                 if ($Configuration.deleteNonExistingEntities) {
-                    Write-Log -level 3 -logtext ("Deleting non existing entities in business objects ...")
+                    Write-Log -level 0 -logtext ("Deleting non existing entities in business objects ...")
 
                     DeleteNonExistingEntities(GetEntities($authSessionID, $null))
                 }
@@ -388,7 +388,7 @@ function GetEntities([STRING] $authSessionID, $nextLink) {
     if ($response.StatusCode -eq 200) {
         try {
             $resultJson = ConvertFrom-Json $([String]::new($response.Body))
-            Write-Log -level 3 -logtext ("Business objects entities returned: " + $resultJson.value.count )
+            Write-Log -level 0 -logtext ("Business objects entities returned: " + $resultJson.value.count )
             return $resultJson
         }
         catch {
