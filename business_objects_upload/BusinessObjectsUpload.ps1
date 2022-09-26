@@ -59,7 +59,7 @@ catch {
 }
 
 # Constructed User-agent value
-[String] $userAgent = If (-not $Configuration.scriptName) { "dvelop-bo-toolkit_script/$version-$($Configuration.dbType)" } Else { "dvelop-bo-toolkit_script_$($Configuration.scriptName)/$version-$($Configuration.dbType)" }
+[String] $userAgent = If (-not $Configuration.scriptName) { "dvelop-bo-toolkit_script/$version ($($Configuration.dbType))" } Else { "dvelop-bo-toolkit_script_$($Configuration.scriptName)/$version ($($Configuration.dbType))" }
 
 [System.Uri] $global:parsedBaseUri = ""
 
