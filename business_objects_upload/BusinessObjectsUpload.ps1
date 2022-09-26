@@ -18,12 +18,7 @@ function ExitHelper {
 #
 # Version of this template.
 # Version is part of the  HTTP Header-Attributes "User-Agent" and is sent with every request.
-[String] $version = "1.0.0"
-
-
-# Constructed User-agent value
-[String] $userAgent = If ($Configuration.scriptName -eq "") { "dvelop-bo-toolkit_script/" + $version } Else { "dvelop-bo-toolkit_script_" + $Configuration.scriptName + "/" + $version }
-
+[String] $version = "1.1.0"
 
 # Script Config
 $Configuration = New-Object -TypeName ScriptConfiguration
@@ -62,6 +57,9 @@ catch {
     Write-Host "Could not parse json config file. Additional information: '$_'."
     ExitHelper
 }
+
+# Constructed User-agent value
+[String] $userAgent = If (-not $Configuration.scriptName) { "dvelop-bo-toolkit_script/$version-$($Configuration.dbType)" } Else { "dvelop-bo-toolkit_script_$($Configuration.scriptName)/$version-$($Configuration.dbType)" }
 
 [System.Uri] $global:parsedBaseUri = ""
 
@@ -314,7 +312,7 @@ function UpdateEntity([STRING] $authSessionID, $body, $key) {
 
     if (!$Configuration.noBatching) {
         $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("Content-Type", "application/json")
+        $headers.Add("content-type", "application/json")
         $request = [PSCustomObject]@{
             id      = "$($BatchingListUpsert.Count + 1)";
             method  = "PUT"
@@ -322,10 +320,6 @@ function UpdateEntity([STRING] $authSessionID, $body, $key) {
             body    = $body
             headers = $headers
         }
-
-        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("Content-Type", "application/json")
-        $request.headers = $headers;
 
         AddElementToBatchingList -BatchingList $BatchingListUpsert -Request $request
     }
