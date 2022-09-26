@@ -102,8 +102,8 @@ jobs:
           ./business_objects_upload/test/TestWrapperScript.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }} -dbType mssql -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/mssql/ScriptConfig.template.json
 
   # Long test on ubuntu using PS7
-  integration_test_long_ubuntu_ps7:
-    name: Long, Ubuntu, PS7, version '${{ matrix.version }}'
+  integration_test_long_ubuntu_ps7_batching:
+    name: Long, Ubuntu, PS7, version, batching enabled '${{ matrix.version }}'
     needs: [setup]
     runs-on: ubuntu-20.04
     strategy:
@@ -124,3 +124,27 @@ jobs:
         run: |
           echo "Test CSV import"
           ./business_objects_upload/test/TestWrapperScript.ps1 -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
+
+  # Long test on ubuntu using PS7
+  integration_test_long_ubuntu_ps7:
+    name: Long, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
+    needs: [setup]
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        version:
+          - ${{fromJson(needs.setup.outputs.matrix_versions)}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.version }}
+      - name: Status
+        run: |
+          echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+          echo "The ${{ github.repository }} repository has been cloned to the runner."
+          echo "The workflow is now ready to test your code on the runner."
+      - name: Execute test
+        shell: pwsh
+        run: |
+          echo "Test CSV import"
+          ./business_objects_upload/test/TestWrapperScript.ps1 -noBatching -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json

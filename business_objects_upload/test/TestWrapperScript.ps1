@@ -5,6 +5,7 @@ param (
     [Parameter(Mandatory = $False)] $apiKey,
     [Parameter(Mandatory = $False)] $baseUri,
     [Parameter(Mandatory = $False)] [switch] $short,
+    [Parameter(Mandatory = $False)] [switch] $noBatching,
     [Parameter(Mandatory = $False)] $dbPassword
 )
 
@@ -64,6 +65,11 @@ if ($dbPassword) {
     Write-Host "Overriding db password"
     # Set the uri
     $configuration.password = $dbPassword;
+}
+if ($noBatching) {
+    Write-Host "Set noBatching to true"
+    # Disable batching
+    $configuration.noBatching = $True;
 }
 
 # Set entity type plural name

@@ -18,12 +18,7 @@ function ExitHelper {
 #
 # Version of this template.
 # Version is part of the  HTTP Header-Attributes "User-Agent" and is sent with every request.
-[String] $version = "1.0.1"
-
-
-# Constructed User-agent value
-[String] $userAgent = If ($Configuration.scriptName -eq "") { "dvelop-bo-toolkit_script/" + $version } Else { "dvelop-bo-toolkit_script_" + $Configuration.scriptName + "/" + $version }
-
+[String] $version = "1.1.0"
 
 # Script Config
 $Configuration = New-Object -TypeName ScriptConfiguration
@@ -63,6 +58,9 @@ catch {
     ExitHelper
 }
 
+# Constructed User-agent value
+[String] $userAgent = If (-not $Configuration.scriptName) { "dvelop-bo-toolkit_script/$version ($($Configuration.dbType))" } Else { "dvelop-bo-toolkit_script_$($Configuration.scriptName)/$version ($($Configuration.dbType))" }
+
 [System.Uri] $global:parsedBaseUri = ""
 
 # Request-Rate-Limits related variables
@@ -74,6 +72,15 @@ $global:WriteLimits = New-Object -TypeName Limits
 $global:WriteLimits.type = "write"
 
 [scriptblock] $global:MappingCode = $null;
+
+# Batching related variables
+$BatchingListUpsert = New-Object "System.Collections.ArrayList"
+$BatchingListDelete = New-Object "System.Collections.ArrayList"
+
+# Metrics
+$global:Metrics = [PSCustomObject]@{
+    NoOfRequestsToBO = 0
+}
 
 #
 #--------------------------------------------
@@ -115,18 +122,30 @@ function Main {
             if ($dbEntityArray.count -gt 0) {
                 # For every row of the data source
                 foreach ($row in $dbEntityArray) {
-                    # Check if entity exists in business objects
-                    $response = CheckIfEntityExists -authSessionID $authSessionID -key $row.($Configuration.entityKey)
-                    if ($response) {
-                        # If so -> update entity
-                        Write-Log -level 3 -logtext ("Updating business objects entity: " + $row.($Configuration.entityKey))
-                        $response = UpdateEntity -authSessionID $authSessionID -body $row -key $row.($Configuration.entityKey)
+                    if (!$Configuration.noBatching) {
+                        # Use batching
+                        Write-Log -level 3 -logtext ("Upserting business objects entity: " + $row.($Configuration.entityKey))
+                        UpdateEntity -authSessionID $authSessionID -body $row -key $row.($Configuration.entityKey)
                     }
-                    elseif (!$response) {
-                        # If not -> create entity
-                        Write-Log -level 3 -logtext ("Creating new business objects entity: " + $row)
-                        $response = CreateEntity -authSessionID $authSessionID -body $row
+                    else {
+                        # Do not use batching
+                        # Check if entity exists in business objects
+                        $response = CheckIfEntityExists -authSessionID $authSessionID -key $row.($Configuration.entityKey)
+                        if ($response) {
+                            # If so -> update entity
+                            Write-Log -level 3 -logtext ("Updating business objects entity with key: " + $row.($Configuration.entityKey))
+                            $response = UpdateEntity -authSessionID $authSessionID -body $row -key $row.($Configuration.entityKey)
+                        }
+                        elseif (!$response) {
+                            # If not -> create entity
+                            Write-Log -level 3 -logtext ("Creating new business objects entity: " + $row)
+                            $response = CreateEntity -authSessionID $authSessionID -body $row
+                        }
                     }
+                }
+                # Cleanup batch lists
+                if ((-not $Configuration.noBatching) -and $BatchingListUpsert.Count -gt 0) {
+                    ExecuteBatchRequest -Requests $BatchingListUpsert
                 }
 
                 # Delete entities that do not exist in the data source but in business objects
@@ -134,6 +153,11 @@ function Main {
                     Write-Log -level 0 -logtext ("Deleting non existing entities in business objects ...")
 
                     DeleteNonExistingEntities(GetEntities($authSessionID, $null))
+
+                    # Cleanup batch list
+                    if ((-not $Configuration.noBatching) -and $BatchingListDelete.Count -gt 0) {
+                        ExecuteBatchRequest -Requests $BatchingListDelete
+                    }
                 }
 
             }
@@ -216,13 +240,6 @@ function DeleteNonExistingEntities($entities) {
 function CheckIfEntityExists([STRING] $authSessionID, $key) {
     Write-Log -level 3 -logtext ("Starting CheckIfEntityExists with key: $key")
 
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Authorization", "Bearer $authSessionID")
-    $headers.Add("Origin", $global:parsedBaseUri.Scheme + "://" + $global:parsedBaseUri.Host)
-    $headers.Add("Content-Type", "application/json")
-    $headers.Add("Accept", "application/json")
-
-
     if ($Configuration.entityKeyType -eq "String") {
         $url = "$businessobjectsUri('$key')"
     }
@@ -232,9 +249,9 @@ function CheckIfEntityExists([STRING] $authSessionID, $key) {
     else {
         Write-Log -level 2 -logtext ("The Entitykeytype is not configured correctly!")
     }
-    $url = [uri]::EscapeUriString($url)
 
-    Write-Log -level 3 -logtext ("URL: $url")
+    $url = [uri]::EscapeUriString($Url)
+    Write-Log -level 3 -logtext ("Escaped URL: $url")
 
     $response = BusinessObjectsRequestHandler $url -Method "GET" -Headers $headers -Limits $global:ReadLimits -OverrideLimitsValue $Configuration.readRequestsLimit
     if ($response.StatusCode -eq 200) {
@@ -259,21 +276,14 @@ function CheckIfEntityExists([STRING] $authSessionID, $key) {
 function CreateEntity([STRING] $authSessionID, $body) {
     Write-Log -level 3 -logtext ("Starting CreateEntity")
 
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Authorization", "Bearer $authSessionID")
-    $headers.Add("Origin", $global:parsedBaseUri.Scheme + "://" + $global:parsedBaseUri.Host)
-    $headers.Add("Content-Type", "application/json; charset=utf-8")
-    $headers.Add("Accept", "application/json")
+    $url = [uri]::EscapeUriString("$businessobjectsUri")
+    Write-Log -level 3 -logtext ("Escaped URL: $url")
 
-    $body = $body | convertTo-Json -Depth 1
-    $url = [uri]::EscapeUriString($businessobjectsUri)
-
-    Write-Log -level 3 -logtext ("URL: $url")
+    $body = $body | ConvertTo-Json -Depth 1
     Write-Log -level 3 -logtext ("Body: $body")
+    $bytesBody = [System.Text.Encoding]::UTF8.GetBytes($body)
 
-    $bytesBody = [System.Text.Encoding]::UTF8.GetBytes($body);
-
-    $response = BusinessObjectsRequestHandler $url -Method "POST" -Headers $headers -Body $bytesBody -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
+    $response = BusinessObjectsRequestHandler -Url $url -Method "POST" -Headers $headers -Body $bytesBody -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
     if ($response.StatusCode -ne 201) {
         Write-Log -level 2 -logtext ("Creating entity failed with statuscode: $($response.StatusCode). Further information: " + $($response.Body))
         if ($Configuration.failOnError) {
@@ -289,38 +299,48 @@ function CreateEntity([STRING] $authSessionID, $body) {
 function UpdateEntity([STRING] $authSessionID, $body, $key) {
     Write-Log -level 3 -logtext ("Starting UpdateEntity with key: $key")
 
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Authorization", "Bearer $authSessionID")
-    $headers.Add("Origin", $global:parsedBaseUri.Scheme + "://" + $global:parsedBaseUri.Host)
-    $headers.Add("Content-Type", "application/json; charset=utf-8")
-    $headers.Add("Accept", "application/json")
-
-    $body = $body | convertTo-Json -Depth 1
-
+    $keyFormatting = ""
     if ($Configuration.entityKeyType -eq "String") {
-        $url = "$businessobjectsUri('$key')"
+        $keyFormatting = "('$key')"
     }
     elseif ($Configuration.entityKeyType -in ("Guid", "Int32", "Int64")) {
-        $url = "$businessobjectsUri($key)"
+        $keyFormatting = "($key)"
     }
     else {
         Write-Log -level 2 -logtext ("The Entitykeytype is not configured correctly!")
     }
-    $url = [uri]::EscapeUriString($url)
 
-    Write-Log -level 3 -logtext ("URL: $url")
-    Write-Log -level 3 -logtext ("Body: $body")
-    $body = [System.Text.Encoding]::UTF8.GetBytes($body);
-
-    $response = BusinessObjectsRequestHandler $url -Method "PUT" -Headers $headers -Body $body -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
-    if ($response.StatusCode -ne 204) {
-        Write-Log -level 2 -logtext ("Updating entity failed with statuscode: $($response.StatusCode). Further information: " + $($response.Body))
-        if ($Configuration.failOnError) {
-            ExitHelper
+    if (!$Configuration.noBatching) {
+        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+        $headers.Add("content-type", "application/json")
+        $request = [PSCustomObject]@{
+            id      = "$($BatchingListUpsert.Count + 1)";
+            method  = "PUT"
+            url     = "$($Configuration.entityPluralName)$keyFormatting"
+            body    = $body
+            headers = $headers
         }
+
+        AddElementToBatchingList -BatchingList $BatchingListUpsert -Request $request
     }
     else {
-        Write-Log -level 0 -logtext ("Entity was updated. key: $key")
+        $body = $body | ConvertTo-Json -Depth 2
+        Write-Log -level 3 -logtext ("Body: $body")
+        $bytesBody = [System.Text.Encoding]::UTF8.GetBytes($body)
+
+        $url = [uri]::EscapeUriString("$businessobjectsUri$keyFormatting")
+        Write-Log -level 3 -logtext ("Escaped URL: $url")
+
+        $response = BusinessObjectsRequestHandler -Url $url -Method "PUT" -Headers $headers -Body $bytesBody -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
+        if ($response.StatusCode -ne 204) {
+            Write-Log -level 2 -logtext ("Updating entity failed with statuscode: $($response.StatusCode). Further information: " + $($response.Body))
+            if ($Configuration.failOnError) {
+                ExitHelper
+            }
+        }
+        else {
+            Write-Log -level 0 -logtext ("Entity was updated. key: $key")
+        }
     }
 }
 
@@ -328,36 +348,40 @@ function UpdateEntity([STRING] $authSessionID, $body, $key) {
 function DeleteEntity([STRING] $authSessionID, $entityKeyType, $key) {
     Write-Log -level 3 -logtext ("Starting DeleteEntity with key: $key")
 
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Authorization", "Bearer $authSessionID")
-    $headers.Add("Origin", $global:parsedBaseUri.Scheme + "://" + $global:parsedBaseUri.Host)
-    $headers.Add("Content-Type", "application/json")
-    $headers.Add("Accept", "application/json")
-
-    if ($entityKeyType -eq "String") {
-        $url = "$businessobjectsUri('$key')"
+    $keyFormatting = ""
+    if ($Configuration.entityKeyType -eq "String") {
+        $keyFormatting = "('$key')"
     }
     elseif ($Configuration.entityKeyType -in ("Guid", "Int32", "Int64")) {
-        $url = "$businessobjectsUri($key)"
+        $keyFormatting = "($key)"
     }
     else {
         Write-Log -level 2 -logtext ("The Entitykeytype is not configured correctly!")
     }
-    $url = [uri]::EscapeUriString($url)
 
-    Write-Log -level 3 -logtext ("URL: $url")
+    if (!$Configuration.noBatching) {
+        $request = [PSCustomObject]@{
+            id     = "$($BatchingListDelete.Count + 1)";
+            method = "DELETE"
+            url    = "$($Configuration.entityPluralName)$keyFormatting"
+        }
 
-    Write-Log -level 3 -logtext ("Deleting entity with key: $key")
-
-    # Attempt to delete an entity that does not exist returns the response code 204 and does not cause the WebRequest to throw an exception.
-    $response = BusinessObjectsRequestHandler $url -Method "DELETE" -Headers $headers -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
-    if ($response.StatusCode -eq 200) {
-        Write-Log -level 0 -logtext ("Entity was deleted successfully. key: $key")
+        AddElementToBatchingList -BatchingList $BatchingListDelete -Request $request
     }
     else {
-        Write-Log -level 2 -logtext ("Deleting entity failed with statuscode: $($response.StatusCode). Further information: " + $($response.Body))
-        if ($Configuration.failOnError) {
-            ExitHelper
+        # Attempt to delete an entity that does not exist returns the response code 204 and does not cause the WebRequest to throw an exception.
+        $url = [uri]::EscapeUriString("$businessobjectsUri$keyFormatting")
+        Write-Log -level 3 -logtext ("Escaped URL: $url")
+
+        $response = BusinessObjectsRequestHandler -Url $url -Method "DELETE" -Headers $headers -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
+        if ($response.StatusCode -eq 200) {
+            Write-Log -level 0 -logtext ("Entity was deleted successfully. key: $key")
+        }
+        else {
+            Write-Log -level 2 -logtext ("Deleting entity failed with statuscode: $($response.StatusCode). Further information: " + $($response.Body))
+            if ($Configuration.failOnError) {
+                ExitHelper
+            }
         }
     }
 }
@@ -365,12 +389,6 @@ function DeleteEntity([STRING] $authSessionID, $entityKeyType, $key) {
 #---------------------
 function GetEntities([STRING] $authSessionID, $nextLink) {
     Write-Log -level 3 -logtext ("Starting GetEntities")
-
-    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-    $headers.Add("Authorization", "Bearer $authSessionID")
-    $headers.Add("Origin", $global:parsedBaseUri.Scheme + "://" + $global:parsedBaseUri.Host)
-    $headers.Add("Content-Type", "application/json")
-    $headers.Add("Accept", "application/json")
 
     # No nextLink present
     if ($null -eq $nextLink) {
@@ -382,7 +400,7 @@ function GetEntities([STRING] $authSessionID, $nextLink) {
         $url = [uri]::EscapeUriString($nextLink)
     }
 
-    Write-Log -level 3 -logtext ("URL: $url")
+    Write-Log -level 3 -logtext ("Escaped URL: $url")
 
     $response = BusinessObjectsRequestHandler $url -Method "GET" -Headers $headers -Limits $global:ReadLimits -OverrideLimitsValue $Configuration.readRequestsLimit
     if ($response.StatusCode -eq 200) {
@@ -409,12 +427,18 @@ function GetEntities([STRING] $authSessionID, $nextLink) {
 function BusinessObjectsRequestHandler {
     param( [Parameter()] $Url, [Parameter()] $Method, [Parameter()] $Headers, [Parameter()] $Body, [Parameter()] $Limits, [Parameter()] $OverrideLimitsValue)
 
+    $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+    $headers.Add("Authorization", "Bearer $authSessionID")
+    $headers.Add("Origin", $global:parsedBaseUri.Scheme + "://" + $global:parsedBaseUri.Host)
+    $headers.Add("Content-Type", "application/json; charset=utf-8")
+    $headers.Add("Accept", "application/json")
+
     # If server does not support limits
     if ($Limits) {
-        return BusinessObjectsRequestHandlerLimits $Url -Method $Method -Headers $Headers -Body $Body -Limits $Limits -OverrideLimitsValue $OverrideLimitsValue
+        return BusinessObjectsRequestHandlerLimits $url -Method $Method -Headers $Headers -Body $Body -Limits $Limits -OverrideLimitsValue $OverrideLimitsValue
     }
     else {
-        return BusinessObjectsRequestHandlerNoLimits $Url -Method $Method -Headers $Headers -Body $Body
+        return BusinessObjectsRequestHandlerNoLimits $url -Method $Method -Headers $Headers -Body $Body
     }
 }
 
@@ -442,6 +466,7 @@ function BusinessObjectsRequestHandlerLimits {
     try {
         $Limits.timeStampLastRequest = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
 
+        $global:Metrics.NoOfRequestsToBO++;
         $response = Invoke-WebRequest $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
 
         $statusCode = $response.StatusCode
@@ -500,6 +525,7 @@ function BusinessObjectsRequestHandlerNoLimits {
     $statusCode = $null
     $responseBody = $null
     try {
+        $global:Metrics.NoOfRequestsToBO++;
         $response = Invoke-WebRequest $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
         $statusCode = $response.StatusCode
         $responseBody = $response.Content
@@ -642,6 +668,53 @@ function ExecuteQuery($connection, $query) {
             $connection.close()
         }
     }
+}
+
+function AddElementToBatchingList {
+    param ([Parameter()] $BatchingList, [Parameter()] $Request)
+
+    $BatchingList.Add($Request) | Out-Null
+
+    if ($BatchingList.Count -eq 100) {
+        Write-Log -level 3 -logtext ("Batching list reached maximum number of entries. Batch request will be sent to business objects.")
+        ExecuteBatchRequest -Requests $BatchingList
+    }
+}
+
+function ExecuteBatchRequest {
+    param ([Parameter()] $Requests)
+
+    $body = [PSCustomObject]@{
+        requests = $Requests
+    } | ConvertTo-Json -Depth 100
+    Write-Log -level 3 -logtext ("Body: $body")
+    $bytesBody = [System.Text.Encoding]::UTF8.GetBytes($body)
+
+    Write-Log -level 0 -logtext ("Executing batch request with $($Requests.Count) entries")
+
+    $url = [uri]::EscapeUriString($($global:parsedBaseUri.ToString() + "businessobjects/custom/" + $modelName + '/$batch'))
+    Write-Log -level 3 -logtext ("Escaped URL: $url")
+
+    $response = BusinessObjectsRequestHandler -Url $url -Method "POST" -Body $bytesBody -Headers $headers -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
+    if ($response.StatusCode -ne 200) {
+        Write-Log -level 2 -logtext ("Batch request failed with statuscode: $($response.StatusCode). Further information: $($response.Body | ConvertFrom-Json | ConvertTo-Json -Depth 100)")
+        if ($Configuration.failOnError) {
+            ExitHelper
+        }
+    }
+    else {
+        Write-Log -level 0 -logtext ("Batch request was successfully executed.")
+        Write-Log -level 3 -logtext ("Batch response: $response")
+
+        $resultJson = ConvertFrom-Json $([String]::new($response.Body))
+        $resultJson.responses | ForEach-Object {
+            if(!($_.status -in (200, 201, 204))) {
+                Write-Log -level 1 -logtext ("Batch request entry failed: $($_ | ConvertTo-Json -Depth 5)")
+            }
+        }
+    }
+
+    $Requests.Clear();
 }
 
 #--------------------
@@ -880,12 +953,6 @@ function CheckConfig($Configuration) {
 #-------------------------------------------
 
 function Write-Log([string]$logtext, [int]$level = 0) {
-    # If 'logDir' is empty log to console
-    if (!$Configuration.logDir) {
-        Write-Host $logtext
-        return;
-    }
-
     $date = get-date -format "yyyy-MM-dd"
     $file = ("Log_" + $date + ".log")
     $logfile = $(PathHelper($Configuration.logDir)) + "\" + $file
@@ -895,19 +962,25 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[INFO] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text
-        $text | Out-File $logfile -Append
+        if($Configuration.logDir){
+            $text | Out-File $logfile -Append
+        }
     }
     if ($level -eq 1) {
         $logtext = "[WARNING] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Yellow
-        $text | Out-File $logfile -Append
+        if($Configuration.logDir){
+            $text | Out-File $logfile -Append
+        }
     }
     if ($level -eq 2) {
         $logtext = "[ERROR] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Red
-        $text | Out-File $logfile -Append
+        if($Configuration.logDir){
+            $text | Out-File $logfile -Append
+        }
     }
 
     # DEBUG Log
@@ -915,7 +988,9 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[DEBUG] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Green
-        $text | Out-File $logfile -Append
+        if($Configuration.logDir){
+            $text | Out-File $logfile -Append
+        }
     }
 }
 
@@ -937,10 +1012,16 @@ function DeleteOldLogs() {
 
 do {
     Write-Host "Start BusinessObjectsUpload.ps1. Script name: '$($Configuration.scriptName)'"
+
+    $stopwatch = [system.diagnostics.stopwatch]::StartNew()
     Main
     if ($Configuration.deleteOldLogs -And $Configuration.logDir) {
         DeleteOldLogs
     }
+    Write-Host "Process took: $($stopwatch.Elapsed.TotalSeconds) seconds"
+    Write-Host "Metrics: $global:Metrics"
+    $global:Metrics.NoOfRequestsToBO = 0;
+
     Write-Host "End BusinessObjectsUpload.ps1. Script name: '$($Configuration.scriptName)'"
 
     if ($Configuration.importIntervalTime) {
@@ -955,6 +1036,7 @@ do {
 
 # Script-Configuration
 class ScriptConfiguration {
+    # Configure the actual import
     [STRING] $scriptName;
     [BOOL] $failOnError;
 
@@ -962,12 +1044,14 @@ class ScriptConfiguration {
     [INT] $importIntervalTime;
     [INT] $loopExecution;
 
+    [INT] $writeRequestsLimit;
+    [INT] $readRequestsLimit;
+    [BOOL] $noBatching;
+
+    # Logging related configuration
     [STRING] $logDir;
     [BOOL] $debugLog;
     [INT] $deleteOldLogs;
-
-    [INT] $writeRequestsLimit;
-    [INT] $readRequestsLimit;
 
     # business objects related configuration
     [STRING] $baseUri;
