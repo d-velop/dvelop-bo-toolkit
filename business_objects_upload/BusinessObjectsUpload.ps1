@@ -124,10 +124,6 @@ function Main {
                 foreach ($row in $dbEntityArray) {
                     if (!$Configuration.noBatching) {
                         # Use batching
-                        if ($Configuration.modelIsStaged) {
-                            Write-Log -level 2 -logtext ("You are trying to perform batching in a staged model. Batching is only provided for published models. Please set either noBatching to true or modelIsStaged to false.")
-                            ExitHelper
-                        }
                         Write-Log -level 3 -logtext ("Upserting business objects entity: " + $row.($Configuration.entityKey))
                         UpdateEntity -authSessionID $authSessionID -body $row -key $row.($Configuration.entityKey)
                     }
@@ -782,6 +778,11 @@ function CheckConfig($Configuration) {
     # If 'deleteOldLogs' is set it must be a positive integer value
     if ($Configuration.deleteOldLogs -And $Configuration.deleteOldLogs -lt 0) {
         Write-Log -level 2 -logtext ("deleteOldLogs must be a positive value! Exiting...")
+        ExitHelper
+    }
+
+    if ($Configuration.modelIsStaged -And !$Configuration.noBatching) {
+        Write-Log -level 2 -logtext ("You are trying to perform batching in a staged model. Batching is only provided for published models. Please set either noBatching to true or modelIsStaged to false.")
         ExitHelper
     }
 
