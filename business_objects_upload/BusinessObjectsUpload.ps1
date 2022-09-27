@@ -18,7 +18,7 @@ function ExitHelper {
 #
 # Version of this template.
 # Version is part of the  HTTP Header-Attributes "User-Agent" and is sent with every request.
-[String] $version = "1.1.0"
+[String] $version = "1.1.1"
 
 # Script Config
 $Configuration = New-Object -TypeName ScriptConfiguration
