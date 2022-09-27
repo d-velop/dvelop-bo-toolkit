@@ -124,6 +124,10 @@ function Main {
                 foreach ($row in $dbEntityArray) {
                     if (!$Configuration.noBatching) {
                         # Use batching
+                        if ($Configuration.modelIsStaged) {
+                            Write-Log -level 2 -logtext ("You are trying to perform batching in a staged model. Batching is only provided for published models. Please set either noBatching to true or modelIsStaged to false.")
+                            ExitHelper
+                        }
                         Write-Log -level 3 -logtext ("Upserting business objects entity: " + $row.($Configuration.entityKey))
                         UpdateEntity -authSessionID $authSessionID -body $row -key $row.($Configuration.entityKey)
                     }
@@ -708,7 +712,7 @@ function ExecuteBatchRequest {
 
         $resultJson = ConvertFrom-Json $([String]::new($response.Body))
         $resultJson.responses | ForEach-Object {
-            if(!($_.status -in (200, 201, 204))) {
+            if (!($_.status -in (200, 201, 204))) {
                 Write-Log -level 1 -logtext ("Batch request entry failed: $($_ | ConvertTo-Json -Depth 5)")
             }
         }
@@ -962,7 +966,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[INFO] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
@@ -970,7 +974,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[WARNING] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Yellow
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
@@ -978,7 +982,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[ERROR] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Red
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
@@ -988,7 +992,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[DEBUG] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Green
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
