@@ -18,7 +18,7 @@ function ExitHelper {
 #
 # Version of this template.
 # Version is part of the  HTTP Header-Attributes "User-Agent" and is sent with every request.
-[String] $version = "1.1.0"
+[String] $version = "1.1.1"
 
 # Script Config
 $Configuration = New-Object -TypeName ScriptConfiguration
@@ -708,7 +708,7 @@ function ExecuteBatchRequest {
 
         $resultJson = ConvertFrom-Json $([String]::new($response.Body))
         $resultJson.responses | ForEach-Object {
-            if(!($_.status -in (200, 201, 204))) {
+            if (!($_.status -in (200, 201, 204))) {
                 Write-Log -level 1 -logtext ("Batch request entry failed: $($_ | ConvertTo-Json -Depth 5)")
             }
         }
@@ -778,6 +778,11 @@ function CheckConfig($Configuration) {
     # If 'deleteOldLogs' is set it must be a positive integer value
     if ($Configuration.deleteOldLogs -And $Configuration.deleteOldLogs -lt 0) {
         Write-Log -level 2 -logtext ("deleteOldLogs must be a positive value! Exiting...")
+        ExitHelper
+    }
+
+    if ($Configuration.modelIsStaged -And !$Configuration.noBatching) {
+        Write-Log -level 2 -logtext ("You are trying to perform batching in a staged model. Batching is only provided for published models. Please set either noBatching to true or modelIsStaged to false.")
         ExitHelper
     }
 
@@ -962,7 +967,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[INFO] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
@@ -970,7 +975,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[WARNING] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Yellow
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
@@ -978,7 +983,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[ERROR] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Red
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
@@ -988,7 +993,7 @@ function Write-Log([string]$logtext, [int]$level = 0) {
         $logtext = "[DEBUG] " + $logtext
         $text = "[" + $logdate + "] - " + $logtext
         Write-Host $text -ForegroundColor Green
-        if($Configuration.logDir){
+        if ($Configuration.logDir) {
             $text | Out-File $logfile -Append
         }
     }
