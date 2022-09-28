@@ -105,4 +105,4 @@ However, the following data types are not currently supported:
 
 ## API Documentation
 
-Additional information can be found in the [d.velop business objects API Guide](https://dv-businessobjects-assets.s3.eu-central-1.amazonaws.com/documentation/latest/business_objects_api.html).
+Additional information can be found in the [d.velop business objects API Guide](https://dv-businessobjects-assets.s3.eu-central-1.amazonaws.com/apidoc/latest/index.html).

@@ -128,4 +128,4 @@ If suppliers and/or customers exist, their values can be adjusted or they can be
 > **_Note:_** Requests with the *- state: staged* prefix only work if the model has not already been published.
 
 ## API Documentation
-Additional information can be found in the [d.velop business objects API Guide](https://dv-businessobjects-assets.s3.eu-central-1.amazonaws.com/documentation/latest/business_objects_api.html).
+Additional information can be found in the [d.velop business objects API Guide](https://dv-businessobjects-assets.s3.eu-central-1.amazonaws.com/apidoc/latest/index.html).
