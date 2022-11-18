@@ -126,3 +126,23 @@ jobs:
           artifacts:
             ${{ github.event.repository.name }}-release-${{ github.ref_name }}.zip
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  notify-teams:
+    runs-on: ubuntu-latest
+    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
+    needs:
+      [
+        integration_test_long_ubuntu_ps7,
+        integration_test_short_windows_ps5,
+        integration_test_short_windows_ps7,
+        integration_test_short_ubuntu_ps7_mssql,
+        integration_test_long_ubuntu_ps7_batching,
+        release
+      ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Sending teams notification
+        run: |
+          chmod +x ./.github/workflows/notification.sh
+          echo "Sending teams notification"
+          ./.github/workflows/notification.sh ${{ secrets.TEAMS_WEBHOOK }}
