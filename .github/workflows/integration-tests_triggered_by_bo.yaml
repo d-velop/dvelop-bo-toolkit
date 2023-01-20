@@ -127,7 +127,7 @@ jobs:
 
   # Short test on ubuntu using PS7
   integration_test_short_ubuntu_ps7_no_batching:
-    name: Long, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
+    name: Short, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
     needs: [setup]
     runs-on: ubuntu-20.04
     strategy:

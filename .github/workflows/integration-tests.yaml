@@ -80,7 +80,7 @@ jobs:
 
   # Short test on ubuntu using PS7 without batching
   integration_test_short_ubuntu_ps7_no_batching:
-    name: Long, Ubuntu, PS7, batching disabled
+    name: Short, Ubuntu, PS7, batching disabled
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
