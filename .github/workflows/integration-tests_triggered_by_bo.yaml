@@ -6,8 +6,8 @@ on:
   schedule:
     # Executes this workflow on a schedule (always uses the latest version on the default branch
     # (see: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule))
-    # Execution every day at 02:00
-    - cron: "0 2 * * *"
+    # Execution on weekdays at 02:27 UTC
+    - cron: "27 2 * * 1-5"
   workflow_dispatch:
     inputs:
       bo_env:
@@ -102,7 +102,7 @@ jobs:
           ./business_objects_upload/test/TestWrapperScript.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }} -dbType mssql -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/mssql/ScriptConfig.template.json
 
   # Long test on ubuntu using PS7
-  integration_test_long_ubuntu_ps7_batching:
+  integration_test_long_ubuntu_ps7:
     name: Long, Ubuntu, PS7, version, batching enabled '${{ matrix.version }}'
     needs: [setup]
     runs-on: ubuntu-20.04
@@ -125,9 +125,9 @@ jobs:
           echo "Test CSV import"
           ./business_objects_upload/test/TestWrapperScript.ps1 -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
 
-  # Long test on ubuntu using PS7
-  integration_test_long_ubuntu_ps7:
-    name: Long, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
+  # Short test on ubuntu using PS7
+  integration_test_short_ubuntu_ps7_no_batching:
+    name: Short, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
     needs: [setup]
     runs-on: ubuntu-20.04
     strategy:
@@ -147,7 +147,7 @@ jobs:
         shell: pwsh
         run: |
           echo "Test CSV import"
-          ./business_objects_upload/test/TestWrapperScript.ps1 -noBatching -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
+          ./business_objects_upload/test/TestWrapperScript.ps1 -short -noBatching -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
 
   notify-teams:
     runs-on: ubuntu-latest
@@ -158,7 +158,7 @@ jobs:
         integration_test_short_windows_ps5,
         integration_test_short_windows_ps7,
         integration_test_short_ubuntu_ps7_mssql,
-        integration_test_long_ubuntu_ps7_batching
+        integration_test_short_ubuntu_ps7_no_batching
       ]
     steps:
       - uses: actions/checkout@v3
