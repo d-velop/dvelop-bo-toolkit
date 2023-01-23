@@ -4,10 +4,11 @@ param (
 )
 
 function ExitHelper {
-    if ($ConfigPath) {
+    if ($Configuration.execByScheduler) {
+        # Exit without prompt to prevent scheduler from hanging
         exit -1
     }
-
+    # Started via explorer right click
     Read-Host -Prompt "Press Enter to exit"
     exit -1
 }
@@ -697,7 +698,7 @@ function ExecuteBatchRequest {
 
     $response = BusinessObjectsRequestHandler -Url $url -Method "POST" -Body $bytesBody -Headers $headers -Limits $global:WriteLimits -OverrideLimitsValue $Configuration.writeRequestsLimit
     if ($response.StatusCode -ne 200) {
-        Write-Log -level 2 -logtext ("Batch request failed with statuscode: $($response.StatusCode). Further information: $($response.Body | ConvertFrom-Json | ConvertTo-Json -Depth 100)")
+        Write-Log -level 2 -logtext ("Batch request failed with statuscode: $($response.StatusCode). Further information: $($response.Body)")
         if ($Configuration.failOnError) {
             ExitHelper
         }
@@ -879,11 +880,11 @@ function CheckConfig($Configuration) {
         }
 
         if (!(Test-Path $(PathHelper($Configuration.csvPath)) -PathType Leaf)) {
-            Write-Host "CSV-Path '$(PathHelper($Configuration.csvPath))' does not exist! Exiting..." -ForegroundColor Red
+            Write-Log -level 2 "CSV-Path '$(PathHelper($Configuration.csvPath))' does not exist! Exiting..." -ForegroundColor Red
             ExitHelper
         }
         elseif ([System.IO.Path]::GetExtension($(PathHelper($Configuration.csvPath))).ToLower() -ne ".csv") {
-            Write-Host "Configured CSV file at '$($Configuration.csvPath)' is not a valid CSV file! Exiting..." -ForegroundColor Red
+            Write-Log -level 2 "Configured CSV file at '$($Configuration.csvPath)' is not a valid CSV file! Exiting..." -ForegroundColor Red
             ExitHelper
         }
 
@@ -917,6 +918,10 @@ function CheckConfig($Configuration) {
     # Check if configs use the old property 'loopExecution'. If that is the case print a hint and exit.
     if ($Configuration.loopExecution) {
         Write-Log -level 2 -logtext ("Old property 'loopExecution' detected. It has been renamed: 'loopExecution' -> 'importIntervalTime'. Exiting...")
+        ExitHelper
+    }
+    if ($Configuration.importIntervalTime -and $Configuration.execByScheduler) {
+        Write-Log -level 2 -logtext ("Both 'importIntervalTime' and 'execByScheduler' are configured. Please use only one of them. Exiting...")
         ExitHelper
     }
 
@@ -1048,6 +1053,7 @@ class ScriptConfiguration {
     [BOOL] $deleteNonExistingEntities;
     [INT] $importIntervalTime;
     [INT] $loopExecution;
+    [BOOL] $execByScheduler;
 
     [INT] $writeRequestsLimit;
     [INT] $readRequestsLimit;

@@ -4,6 +4,7 @@
 
     "deleteNonExistingEntities": true,
     "importIntervalTime": 0,
+    "execByScheduler": true,
     "noBatching": false,
 
     "logDir": null,

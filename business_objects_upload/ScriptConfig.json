@@ -1,6 +1,6 @@
 {
     "scriptName": "import_suppliers_demo",
-    "failOnError": true,
+    "failOnError": false,
 
     "deleteNonExistingEntities": true,
     "importIntervalTime": 600,
