@@ -9,35 +9,18 @@ on:
     # Execution on weekdays at 02:27 UTC
     - cron: "27 2 * * 1-5"
   workflow_dispatch:
-    inputs:
-      bo_env:
-        description: 'bo env to test against: currently only test is available'
-        required: true
-        default: 'test'
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix_versions: ${{ steps.set-version-matrix.outputs.matrix }}
-      matrix_envs: ${{ steps.set-env-matrix.outputs.matrix }}
-    steps:
-    - id: set-version-matrix
-      # Define what versions should be regularly tested. An empty string means the latest commit (not release!).
-      # (Versions must be defined by their git refs name, e. g. 'refs/tags/v1.0.0')
-      run: echo "::set-output name=matrix::['']"
-
   # Short test on windows using PS7
   integration_test_short_windows_ps7:
     name: Short, Windows, PS7, version '${{ matrix.version }}'
-    needs: [setup]
     runs-on: windows-2019
     strategy:
       matrix:
         version:
-          - ${{fromJson(needs.setup.outputs.matrix_versions)}}
+          - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -51,18 +34,16 @@ jobs:
           echo "Test CSV import"
           ./business_objects_upload/test/TestWrapperScript.ps1 -short -dbType csv -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/csv/ScriptConfig.template.json
 
-
   # Short test on windows using PS5
   integration_test_short_windows_ps5:
     name: Short, Windows, PS5, version '${{ matrix.version }}'
-    needs: [setup]
     runs-on: windows-2019
     strategy:
       matrix:
         version:
-          - ${{fromJson(needs.setup.outputs.matrix_versions)}}
+          - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -79,14 +60,13 @@ jobs:
   # Long test on ubuntu using PS7
   integration_test_short_ubuntu_ps7_mssql:
     name: Short, Ubuntu, PS7, mssql data source, version '${{ matrix.version }}'
-    needs: [setup]
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         version:
-          - ${{fromJson(needs.setup.outputs.matrix_versions)}}
+          - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -104,14 +84,13 @@ jobs:
   # Long test on ubuntu using PS7
   integration_test_long_ubuntu_ps7:
     name: Long, Ubuntu, PS7, version, batching enabled '${{ matrix.version }}'
-    needs: [setup]
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         version:
-          - ${{fromJson(needs.setup.outputs.matrix_versions)}}
+          - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -128,14 +107,13 @@ jobs:
   # Short test on ubuntu using PS7
   integration_test_short_ubuntu_ps7_no_batching:
     name: Short, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
-    needs: [setup]
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         version:
-          - ${{fromJson(needs.setup.outputs.matrix_versions)}}
+          - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -158,7 +136,7 @@ jobs:
         integration_test_short_windows_ps5,
         integration_test_short_windows_ps7,
         integration_test_short_ubuntu_ps7_mssql,
-        integration_test_short_ubuntu_ps7_no_batching
+        integration_test_short_ubuntu_ps7_no_batching,
       ]
     steps:
       - uses: actions/checkout@v3
