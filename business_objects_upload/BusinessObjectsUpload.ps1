@@ -191,7 +191,7 @@ function IdpAuth {
 
         Write-Log -level 3 -logtext ("URL: $url")
 
-        $response = Invoke-RestMethod $url -Method Get -Headers $headers -UserAgent $userAgent
+        $response = Invoke-RestMethod -UseBasicParsing $url -Method Get -Headers $headers -UserAgent $userAgent
         $token = $response.AuthSessionId
 
         return $token
@@ -468,7 +468,7 @@ function BusinessObjectsRequestHandlerLimits {
         $Limits.timeStampLastRequest = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
 
         $global:Metrics.NoOfRequestsToBO++;
-        $response = Invoke-WebRequest $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
+        $response = Invoke-WebRequest -UseBasicParsing $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
 
         $statusCode = $response.StatusCode
         $responseBody = $response.Content
@@ -527,7 +527,7 @@ function BusinessObjectsRequestHandlerNoLimits {
     $responseBody = $null
     try {
         $global:Metrics.NoOfRequestsToBO++;
-        $response = Invoke-WebRequest $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
+        $response = Invoke-WebRequest -UseBasicParsing $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
         $statusCode = $response.StatusCode
         $responseBody = $response.Content
     }
