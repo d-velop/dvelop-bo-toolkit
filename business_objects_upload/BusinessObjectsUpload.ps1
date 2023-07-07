@@ -19,7 +19,7 @@ function ExitHelper {
 #
 # Version of this template.
 # Version is part of the  HTTP Header-Attributes "User-Agent" and is sent with every request.
-[String] $version = "1.2.0"
+[String] $version = "1.2.1"
 
 # Script Config
 $Configuration = New-Object -TypeName ScriptConfiguration
@@ -114,10 +114,10 @@ function Main {
         if (($connection.State -eq "Open") -or ($Configuration.DBType -eq "CSV")) {
             # Execute DB query
             if ($connection.State -eq "Open") {
-                $dbEntityArray = ExecuteQuery -connection $connection -query $Configuration.query
+                $dbEntityArray = @(ExecuteQuery -connection $connection -query $Configuration.query)
             }
             elseif ($Configuration.DBType -eq "CSV") {
-                $dbEntityArray = ReadCSVFile
+                $dbEntityArray = @(ReadCSVFile)
             }
 
             if ($dbEntityArray.count -gt 0) {
@@ -191,7 +191,7 @@ function IdpAuth {
 
         Write-Log -level 3 -logtext ("URL: $url")
 
-        $response = Invoke-RestMethod $url -Method Get -Headers $headers -UserAgent $userAgent
+        $response = Invoke-RestMethod -UseBasicParsing $url -Method Get -Headers $headers -UserAgent $userAgent
         $token = $response.AuthSessionId
 
         return $token
@@ -468,7 +468,7 @@ function BusinessObjectsRequestHandlerLimits {
         $Limits.timeStampLastRequest = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
 
         $global:Metrics.NoOfRequestsToBO++;
-        $response = Invoke-WebRequest $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
+        $response = Invoke-WebRequest -UseBasicParsing $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
 
         $statusCode = $response.StatusCode
         $responseBody = $response.Content
@@ -527,7 +527,7 @@ function BusinessObjectsRequestHandlerNoLimits {
     $responseBody = $null
     try {
         $global:Metrics.NoOfRequestsToBO++;
-        $response = Invoke-WebRequest $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
+        $response = Invoke-WebRequest -UseBasicParsing $Url -Method $Method -body $Body -Headers $Headers -UserAgent $UserAgent
         $statusCode = $response.StatusCode
         $responseBody = $response.Content
     }
