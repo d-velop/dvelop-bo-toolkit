@@ -114,10 +114,10 @@ function Main {
         if (($connection.State -eq "Open") -or ($Configuration.DBType -eq "CSV")) {
             # Execute DB query
             if ($connection.State -eq "Open") {
-                $dbEntityArray = ExecuteQuery -connection $connection -query $Configuration.query
+                $dbEntityArray = @(ExecuteQuery -connection $connection -query $Configuration.query)
             }
             elseif ($Configuration.DBType -eq "CSV") {
-                $dbEntityArray = ReadCSVFile
+                $dbEntityArray = @(ReadCSVFile)
             }
 
             if ($dbEntityArray.count -gt 0) {
