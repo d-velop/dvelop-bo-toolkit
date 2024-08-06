@@ -4,7 +4,7 @@ param (
 
 [Environment]::SetEnvironmentVariable('DB_PASSWORD', $dbPassword, 'Process')
 
-docker-compose -f ./business_objects_upload/test/mssql/docker-compose.yaml up -d
+docker compose -f ./business_objects_upload/test/mssql/docker-compose.yaml up -d
 
 Start-Sleep 30
 
