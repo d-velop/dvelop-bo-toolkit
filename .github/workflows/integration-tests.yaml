@@ -10,7 +10,7 @@ jobs:
     name: Short, Windows, PS7
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -27,7 +27,7 @@ jobs:
     name: Short, Windows, PS5
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -44,7 +44,7 @@ jobs:
     name: Short, Ubuntu, PS7, mssql data source
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -62,7 +62,7 @@ jobs:
     name: Long, Ubuntu, PS7, batching enabled
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -79,7 +79,7 @@ jobs:
     name: Short, Ubuntu, PS7, batching disabled
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Status
         run: |
           echo "The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
@@ -107,9 +107,9 @@ jobs:
     # See: https://stackoverflow.com/questions/65324440/github-actions-using-workflow-run-based-on-new-tags
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Install dependencies
@@ -141,7 +141,7 @@ jobs:
         release,
       ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Sending teams notification
         run: |
           chmod +x ./.github/workflows/notification.sh

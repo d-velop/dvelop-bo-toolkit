@@ -20,7 +20,7 @@ jobs:
         version:
           - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -43,7 +43,7 @@ jobs:
         version:
           - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -66,7 +66,7 @@ jobs:
         version:
           - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -90,7 +90,7 @@ jobs:
         version:
           - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -113,7 +113,7 @@ jobs:
         version:
           - ${{fromJson(vars.VERSION_MATRIX)}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.version }}
       - name: Status
@@ -139,7 +139,7 @@ jobs:
         integration_test_short_ubuntu_ps7_no_batching,
       ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Sending teams notification
         run: |
           chmod +x ./.github/workflows/notification.sh
