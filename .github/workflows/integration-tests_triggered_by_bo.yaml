@@ -129,7 +129,7 @@ jobs:
 
   notify-teams:
     runs-on: ubuntu-latest
-    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
+    #if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
     needs:
       [
         integration_test_long_ubuntu_ps7,
