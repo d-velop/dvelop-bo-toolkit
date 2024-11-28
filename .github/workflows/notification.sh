@@ -33,7 +33,7 @@ body=$(cat << EOF
                             {
                                 "type": "Action.OpenUrl",
                                 "title": "Go to failed workflow run",
-                                "uri": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+                                "url": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
                             }
                         ]
                     }
