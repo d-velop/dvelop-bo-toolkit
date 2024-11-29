@@ -144,4 +144,4 @@ jobs:
         run: |
           chmod +x ./.github/workflows/notification.sh
           echo "Sending teams notification"
-          ./.github/workflows/notification.sh ${{ secrets.TEAMS_WEBHOOK }}
+          ./.github/workflows/notification.sh "${{ secrets.POWERAUTOMATE_WEBHOOK_URL }}"

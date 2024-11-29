@@ -3,21 +3,44 @@ set -Eeuo pipefail
 
 body=$(cat << EOF
 {
-    "@context": "https://schema.org/extensions",
-    "@type": "MessageCard",
-    "themeColor": "DF0909",
-    "title": "BO Toolkit pipeline failed",
-    "text": "<p>At least one job in the toolkit pipeline has failed</p>",
-    "potentialAction": [
+    "type": "message",
+    "attachments": [
         {
-            "@type": "OpenUri",
-            "name": "Go to failed workflow run",
-            "targets": [
-                {
-                    "os": "default",
-                    "uri": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-                }
-            ]
+            "contentType": "application/vnd.microsoft.card.adaptive",
+            "contentUrl": null,
+            "content": {
+                "type": "AdaptiveCard",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "size": "medium",
+                        "weight": "bolder",
+                        "text": "BO Toolkit pipeline failed"
+                    },
+                    {
+                        "type": "TextBlock",
+                        "text": "At least one job in the toolkit pipeline has failed.",
+                        "wrap": true
+                    },
+                    {
+                        "type": "TextBlock",
+                        "text": "Branch: $GITHUB_REF_NAME",
+                        "wrap": true
+                    },
+                    {
+                        "type": "ActionSet",
+                        "actions": [
+                            {
+                                "type": "Action.OpenUrl",
+                                "title": "Go to failed workflow run",
+                                "url": "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+                            }
+                        ]
+                    }
+                ],
+                "\$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "version": "1.2"
+            }
         }
     ]
 }
