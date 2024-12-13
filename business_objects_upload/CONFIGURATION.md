@@ -130,6 +130,7 @@ Of course the null check is not mandatory, but depends on your mapping code.
     "double = [double]$row.double",
     "guid = $row.guid",
     "int32 = [int]$row.int32",
-    "date = if($row.date) {([datetime]::parse($row.date)).ToString('yyyy-MM-dd')} else {$null}"
+    "date = if($row.date) {([datetime]::parse($row.date)).ToString('yyyy-MM-dd')} else {$null}",
+    "dateTimeOffset = if($row.dateTimeOffset) {([datetime]::parse($row.dateTimeOffset)).ToString('yyyy-MM-ddTHH:mm:ssZ')} else {$null}",
 ]
 ```
