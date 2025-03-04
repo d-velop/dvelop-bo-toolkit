@@ -56,9 +56,9 @@ jobs:
           echo "Test MSSQL import"
           echo "Installing mssql tools"
           curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
-          add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
-          apt-get update
-          apt-get install sqlcmd
+          sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/24.04/prod.list)"
+          sudo apt-get update
+          sudo apt-get install sqlcmd
           ./.github/workflows/setup-mssql-db.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }}
           ./business_objects_upload/test/TestWrapperScript.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }} -dbType mssql -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/mssql/ScriptConfig.template.json
 
