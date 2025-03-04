@@ -125,7 +125,8 @@ jobs:
           sudo chmod +x ./.github/workflows/create-release.sh
           ./.github/workflows/create-release.sh ${{ github.event.repository.name }} ${{ github.ref_name }}
       - name: Archive release
-        uses: actions/upload-artifact@v2
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}-release-latest.zip
       - name: Create release
