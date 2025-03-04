@@ -31,4 +31,4 @@ cd ..
 rm ./temp -r
 
 # Create copy of the zip file with the latest tag
-cp ../$1-release-$ref_name.zip ../$1-release-latest.zip
+cp $1-release-$ref_name.zip $1-release-latest.zip
