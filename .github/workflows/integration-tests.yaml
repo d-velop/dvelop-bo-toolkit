@@ -8,7 +8,7 @@ jobs:
   # Short test on windows using PS7
   integration_test_short_windows_ps7:
     name: Short, Windows, PS7
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
       - name: Status
@@ -25,7 +25,7 @@ jobs:
   # Short test on windows using PS5
   integration_test_short_windows_ps5:
     name: Short, Windows, PS5
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
       - name: Status
@@ -42,7 +42,7 @@ jobs:
   # Short test on ubuntu using PS7 and a mssql data source
   integration_test_short_ubuntu_ps7_mssql:
     name: Short, Ubuntu, PS7, mssql data source
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Status
@@ -60,7 +60,7 @@ jobs:
   # Long test on ubuntu using PS7
   integration_test_long_ubuntu_ps7:
     name: Long, Ubuntu, PS7, batching enabled
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Status
@@ -77,7 +77,7 @@ jobs:
   # Short test on ubuntu using PS7 without batching
   integration_test_short_ubuntu_ps7_no_batching:
     name: Short, Ubuntu, PS7, batching disabled
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Status
@@ -101,7 +101,7 @@ jobs:
         integration_test_short_ubuntu_ps7_mssql,
         integration_test_short_ubuntu_ps7_no_batching,
       ]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     # Only run this job when a tag is pushed that starts with a 'v'
     # Goal is to refactor this job into another workflow. But that is not supported in the moment.
     # See: https://stackoverflow.com/questions/65324440/github-actions-using-workflow-run-based-on-new-tags
