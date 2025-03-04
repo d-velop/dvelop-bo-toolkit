@@ -52,6 +52,7 @@ jobs:
           echo "The workflow is now ready to test your code on the runner."
       - name: Execute test
         shell: pwsh
+        # sqlcmd must be installed manually as it is not pre-installed on the ubuntu runner 24.04 (see https://github.com/microsoft/go-sqlcmd/issues/532)
         run: |
           echo "Test MSSQL import"
           echo "Installing mssql tools"
