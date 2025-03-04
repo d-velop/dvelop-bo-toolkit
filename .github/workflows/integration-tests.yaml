@@ -128,7 +128,7 @@ jobs:
         if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-release-latest.zip
+          path: ${{ github.event.repository.name }}-release-latest.zip
       - name: Create release
         # Only run this job when a tag is pushed that starts with a 'v'
         # Goal is to refactor this job into another workflow. But that is not supported in the moment.
