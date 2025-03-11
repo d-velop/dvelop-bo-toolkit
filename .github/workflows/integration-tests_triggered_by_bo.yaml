@@ -14,7 +14,7 @@ jobs:
   # Short test on windows using PS7
   integration_test_short_windows_ps7:
     name: Short, Windows, PS7, version '${{ matrix.version }}'
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       matrix:
         version:
@@ -37,7 +37,7 @@ jobs:
   # Short test on windows using PS5
   integration_test_short_windows_ps5:
     name: Short, Windows, PS5, version '${{ matrix.version }}'
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       matrix:
         version:
@@ -60,7 +60,7 @@ jobs:
   # Long test on ubuntu using PS7
   integration_test_short_ubuntu_ps7_mssql:
     name: Short, Ubuntu, PS7, mssql data source, version '${{ matrix.version }}'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         version:
@@ -76,15 +76,21 @@ jobs:
           echo "The workflow is now ready to test your code on the runner."
       - name: Execute test
         shell: pwsh
+        # sqlcmd must be installed manually as it is not pre-installed on the ubuntu runner 24.04 (see https://github.com/microsoft/go-sqlcmd/issues/532)
         run: |
           echo "Test MSSQL import"
+          echo "Installing mssql tools"
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+          sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/22.04/prod.list)"
+          sudo apt-get update
+          sudo apt-get install sqlcmd
           ./.github/workflows/setup-mssql-db.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }}
           ./business_objects_upload/test/TestWrapperScript.ps1 -dbPassword ${{ secrets.MSSQL_DB_PASSWORD_TEST }} -dbType mssql -baseUri ${{ secrets.BO_BASE_URI_TEST }} -apiKey "${{ secrets.BO_API_KEY_TEST }}" -configTemplatePath ./business_objects_upload/test/mssql/ScriptConfig.template.json
 
   # Long test on ubuntu using PS7
   integration_test_long_ubuntu_ps7:
     name: Long, Ubuntu, PS7, version, batching enabled '${{ matrix.version }}'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         version:
@@ -107,7 +113,7 @@ jobs:
   # Short test on ubuntu using PS7
   integration_test_short_ubuntu_ps7_no_batching:
     name: Short, Ubuntu, PS7, version, batching disabled '${{ matrix.version }}'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         version:
