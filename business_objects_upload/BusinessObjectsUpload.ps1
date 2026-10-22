@@ -204,37 +204,37 @@ function IdpAuth {
 
 #--------------
 function DeleteNonExistingEntities($entities) {
-    # If "$entities" is "null": condition evaluates to false (no runtime error)
-    if ($entities.value.count -gt 0) {
+    # Build a case-insensitive lookup of database keys
+    $dbKeys = New-Object "System.Collections.Generic.HashSet[string]" ([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($dbEntity in $dbEntityArray) {
+        [void] $dbKeys.Add([STRING] $dbEntity.($Configuration.entityKey))
+    }
+
+    while ($entities.value.count -gt 0) {
         foreach ($businessobjectsEntity in $entities.value) {
-            #Resetting $existsInDB for each business objects entity
-            $existsInDB = $false
+            $key = $businessobjectsEntity.($Configuration.entityKey)
 
-            $dbEntityResult = $dbEntityArray | Where-Object $Configuration.entityKey -eq $businessobjectsEntity.($Configuration.entityKey) | Select-Object { $_.($Configuration.entityKey) }
-            if ($null -ne $dbEntityResult) {
-                Write-Log -level 3 -logtext ("Business Objects entity with key: " + $businessobjectsEntity.($Configuration.entityKey) + " exists in Database")
-                $existsInDB = $true
+            if ($dbKeys.Contains([STRING] $key)) {
+                Write-Log -level 3 -logtext ("Business Objects entity with key: $key exists in Database")
             }
-
-            if (!$existsInDB) {
-                Write-Log -level 3 -logtext ("Entity should be deleted. Key: " + $businessobjectsEntity.($Configuration.entityKey))
-                DeleteEntity -authSessionID $authSessionID -entityKeyType $Configuration.entityKeyType -key $businessobjectsEntity.($Configuration.entityKey)
+            else {
+                Write-Log -level 3 -logtext ("Entity should be deleted. Key: $key")
+                DeleteEntity -authSessionID $authSessionID -entityKeyType $Configuration.entityKeyType -key $key
             }
         }
         # All entities in current page processed
-        if ($null -ne $entities."@odata.nextLink") {
-            Write-Log -level 3 -logtext ("Page processed. 'nextLink' attribute present, start retrieving next page: " + $entities."@odata.nextLink")
-            DeleteNonExistingEntities(GetEntities -authSessionID $authSessionID -nextLink $entities."@odata.nextLink")
-        }
-        else {
+        $nextLink = $entities."@odata.nextLink"
+        if ($null -eq $nextLink) {
             # No more entities, processing finished
             Write-Log -level 3 -logtext ("Page processed. No 'nextLink' attribute present, all entities processed")
+            return
         }
+
+        Write-Log -level 3 -logtext ("Page processed. 'nextLink' attribute present, start retrieving next page: " + $nextLink)
+        $entities = GetEntities -authSessionID $authSessionID -nextLink $nextLink
     }
-    else {
-        Write-Log -level 1 -logtext ("GetEntities returned no business objects entities.")
-        return
-    }
+
+    Write-Log -level 1 -logtext ("GetEntities returned no business objects entities.")
 }
 
 #--------------
