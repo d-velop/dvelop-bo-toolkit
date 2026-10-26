@@ -114,10 +114,10 @@ function Main {
         if (($connection.State -eq "Open") -or ($Configuration.DBType -eq "CSV")) {
             # Execute DB query
             if ($connection.State -eq "Open") {
-                $dbEntityMap = ConvertToEntityMap -rows @(ExecuteQuery -connection $connection -query $Configuration.query)
+                $dbEntityMap = ExecuteQuery -connection $connection -query $Configuration.query
             }
             elseif ($Configuration.DBType -eq "CSV") {
-                $dbEntityMap = ConvertToEntityMap -rows @(ReadCSVFile)
+                $dbEntityMap = ReadCSVFile
             }
 
             if ($dbEntityMap.Count -gt 0) {
@@ -203,17 +203,17 @@ function IdpAuth {
 }
 
 #--------------
-function ConvertToEntityMap($rows) {
-    $map = New-Object "System.Collections.Generic.Dictionary[string,object]" ([System.StringComparer]::OrdinalIgnoreCase)
-    foreach ($row in $rows) {
-        $key = [STRING] $row.($Configuration.entityKey)
-        if ($map.ContainsKey($key)) {
-            Write-Log -level 1 -logtext ("Duplicate key '$key' in data source. The last entry is used.")
-        }
-        $map[$key] = $row
-    }
+function NewEntityMap {
+    return , (New-Object "System.Collections.Generic.Dictionary[string,object]" ([System.StringComparer]::OrdinalIgnoreCase))
+}
 
-    return , $map
+#--------------
+function AddToEntityMap($map, $entity) {
+    $key = [STRING] $entity.($Configuration.entityKey)
+    if ($map.ContainsKey($key)) {
+        Write-Log -level 1 -logtext ("Duplicate key '$key' in data source. The last entry is used.")
+    }
+    $map[$key] = $entity
 }
 
 #--------------
@@ -625,28 +625,24 @@ function ConnectToOracleDB {
 
 #--------------------
 function ReadCSVFile {
+    $map = NewEntityMap
+
     if ($Configuration.csvHeader) {
         $csv = Import-Csv -Path $(PathHelper($Configuration.csvPath)) -Header $Configuration.csvHeader -Delimiter $Configuration.csvFileDelimiter
 
-        $result = $csv | Select-Object -Skip 1 | ForEach-Object {
-            $row = $_;
-
-            & $MappingCode
+        foreach ($row in ($csv | Select-Object -Skip 1)) {
+            AddToEntityMap -map $map -entity (& $MappingCode)
         }
-
-        return $result;
     }
     else {
         $csv = Import-Csv -Path $(PathHelper($Configuration.csvPath)) -Delimiter $Configuration.csvFileDelimiter
 
-        $result = $csv | Select-Object | ForEach-Object {
-            $row = $_;
-
-            & $MappingCode
+        foreach ($row in $csv) {
+            AddToEntityMap -map $map -entity (& $MappingCode)
         }
-
-        return $result;
     }
+
+    return , $map
 }
 
 #--------------------
@@ -658,17 +654,16 @@ function ExecuteQuery($connection, $query) {
         $command.CommandText = $query
         $reader = $command.ExecuteReader()
 
-        $result = @()
+        $map = NewEntityMap
         $row = $reader;
         while ($row.read()) {
-            $temp = & $MappingCode
-            $result = $result + $temp;
+            AddToEntityMap -map $map -entity (& $MappingCode)
         }
 
         Write-Log -level 3 -logtext ("Closing database connection")
         $connection.Close()
         Write-Log -level 3 -logtext ("Database connection closed")
-        return $result
+        return , $map
 
     }
     catch {
