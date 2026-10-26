@@ -204,7 +204,7 @@ function IdpAuth {
 
 #--------------
 function NewEntityMap {
-    return , (New-Object "System.Collections.Generic.Dictionary[string,object]" ([System.StringComparer]::OrdinalIgnoreCase))
+    return New-Object "System.Collections.Generic.Dictionary[string,object]" ([System.StringComparer]::OrdinalIgnoreCase)
 }
 
 #--------------
@@ -642,7 +642,7 @@ function ReadCSVFile {
         }
     }
 
-    return , $map
+    return $map
 }
 
 #--------------------
@@ -663,7 +663,7 @@ function ExecuteQuery($connection, $query) {
         Write-Log -level 3 -logtext ("Closing database connection")
         $connection.Close()
         Write-Log -level 3 -logtext ("Database connection closed")
-        return , $map
+        return $map
 
     }
     catch {
