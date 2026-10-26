@@ -19,7 +19,7 @@ function ExitHelper {
 #
 # Version of this template.
 # Version is part of the  HTTP Header-Attributes "User-Agent" and is sent with every request.
-[String] $version = "1.2.2"
+[String] $version = "1.2.3"
 
 # Script Config
 $Configuration = New-Object -TypeName ScriptConfiguration
@@ -114,15 +114,15 @@ function Main {
         if (($connection.State -eq "Open") -or ($Configuration.DBType -eq "CSV")) {
             # Execute DB query
             if ($connection.State -eq "Open") {
-                $dbEntityArray = @(ExecuteQuery -connection $connection -query $Configuration.query)
+                $dbEntityMap = ExecuteQuery -connection $connection -query $Configuration.query
             }
             elseif ($Configuration.DBType -eq "CSV") {
-                $dbEntityArray = @(ReadCSVFile)
+                $dbEntityMap = ReadCSVFile
             }
 
-            if ($dbEntityArray.count -gt 0) {
+            if ($dbEntityMap.Count -gt 0) {
                 # For every row of the data source
-                foreach ($row in $dbEntityArray) {
+                foreach ($row in $dbEntityMap.Values) {
                     if (!$Configuration.noBatching) {
                         # Use batching
                         Write-Log -level 3 -logtext ("Upserting business objects entity: " + $row.($Configuration.entityKey))
@@ -153,7 +153,7 @@ function Main {
                 if ($Configuration.deleteNonExistingEntities) {
                     Write-Log -level 0 -logtext ("Deleting non existing entities in business objects ...")
 
-                    DeleteNonExistingEntities(GetEntities($authSessionID, $null))
+                    DeleteNonExistingEntities
 
                     # Cleanup batch list
                     if ((-not $Configuration.noBatching) -and $BatchingListDelete.Count -gt 0) {
@@ -203,38 +203,49 @@ function IdpAuth {
 }
 
 #--------------
-function DeleteNonExistingEntities($entities) {
+function NewEntityMap {
+    return New-Object "System.Collections.Generic.Dictionary[string,object]" ([System.StringComparer]::OrdinalIgnoreCase)
+}
+
+#--------------
+function AddToEntityMap($map, $entity) {
+    $key = [STRING] $entity.($Configuration.entityKey)
+    if ($map.ContainsKey($key)) {
+        Write-Log -level 1 -logtext ("Duplicate key '$key' in data source. The last entry is used.")
+    }
+    $map[$key] = $entity
+}
+
+#--------------
+function DeleteNonExistingEntities {
+    $entities = GetEntities -authSessionID $authSessionID -nextLink $null
+
     # If "$entities" is "null": condition evaluates to false (no runtime error)
-    if ($entities.value.count -gt 0) {
+    while ($entities.value.count -gt 0) {
         foreach ($businessobjectsEntity in $entities.value) {
-            #Resetting $existsInDB for each business objects entity
-            $existsInDB = $false
+            $key = $businessobjectsEntity.($Configuration.entityKey)
 
-            $dbEntityResult = $dbEntityArray | Where-Object $Configuration.entityKey -eq $businessobjectsEntity.($Configuration.entityKey) | Select-Object { $_.($Configuration.entityKey) }
-            if ($null -ne $dbEntityResult) {
-                Write-Log -level 3 -logtext ("Business Objects entity with key: " + $businessobjectsEntity.($Configuration.entityKey) + " exists in Database")
-                $existsInDB = $true
+            if ($dbEntityMap.ContainsKey([STRING] $key)) {
+                Write-Log -level 3 -logtext ("Business Objects entity with key: $key exists in Database")
             }
-
-            if (!$existsInDB) {
-                Write-Log -level 3 -logtext ("Entity should be deleted. Key: " + $businessobjectsEntity.($Configuration.entityKey))
-                DeleteEntity -authSessionID $authSessionID -entityKeyType $Configuration.entityKeyType -key $businessobjectsEntity.($Configuration.entityKey)
+            else {
+                Write-Log -level 3 -logtext ("Entity should be deleted. Key: $key")
+                DeleteEntity -authSessionID $authSessionID -entityKeyType $Configuration.entityKeyType -key $key
             }
         }
         # All entities in current page processed
-        if ($null -ne $entities."@odata.nextLink") {
-            Write-Log -level 3 -logtext ("Page processed. 'nextLink' attribute present, start retrieving next page: " + $entities."@odata.nextLink")
-            DeleteNonExistingEntities(GetEntities -authSessionID $authSessionID -nextLink $entities."@odata.nextLink")
-        }
-        else {
+        $nextLink = $entities."@odata.nextLink"
+        if ($null -eq $nextLink) {
             # No more entities, processing finished
             Write-Log -level 3 -logtext ("Page processed. No 'nextLink' attribute present, all entities processed")
+            return
         }
+
+        Write-Log -level 3 -logtext ("Page processed. 'nextLink' attribute present, start retrieving next page: " + $nextLink)
+        $entities = GetEntities -authSessionID $authSessionID -nextLink $nextLink
     }
-    else {
-        Write-Log -level 1 -logtext ("GetEntities returned no business objects entities.")
-        return
-    }
+
+    Write-Log -level 1 -logtext ("GetEntities returned no business objects entities.")
 }
 
 #--------------
@@ -614,28 +625,24 @@ function ConnectToOracleDB {
 
 #--------------------
 function ReadCSVFile {
+    $map = NewEntityMap
+
     if ($Configuration.csvHeader) {
         $csv = Import-Csv -Path $(PathHelper($Configuration.csvPath)) -Header $Configuration.csvHeader -Delimiter $Configuration.csvFileDelimiter
 
-        $result = $csv | Select-Object -Skip 1 | ForEach-Object {
-            $row = $_;
-
-            & $MappingCode
+        foreach ($row in ($csv | Select-Object -Skip 1)) {
+            AddToEntityMap -map $map -entity (& $MappingCode)
         }
-
-        return $result;
     }
     else {
         $csv = Import-Csv -Path $(PathHelper($Configuration.csvPath)) -Delimiter $Configuration.csvFileDelimiter
 
-        $result = $csv | Select-Object | ForEach-Object {
-            $row = $_;
-
-            & $MappingCode
+        foreach ($row in $csv) {
+            AddToEntityMap -map $map -entity (& $MappingCode)
         }
-
-        return $result;
     }
+
+    return $map
 }
 
 #--------------------
@@ -647,17 +654,16 @@ function ExecuteQuery($connection, $query) {
         $command.CommandText = $query
         $reader = $command.ExecuteReader()
 
-        $result = @()
+        $map = NewEntityMap
         $row = $reader;
         while ($row.read()) {
-            $temp = & $MappingCode
-            $result = $result + $temp;
+            AddToEntityMap -map $map -entity (& $MappingCode)
         }
 
         Write-Log -level 3 -logtext ("Closing database connection")
         $connection.Close()
         Write-Log -level 3 -logtext ("Database connection closed")
-        return $result
+        return $map
 
     }
     catch {
