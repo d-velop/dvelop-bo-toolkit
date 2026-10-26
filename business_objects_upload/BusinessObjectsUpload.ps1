@@ -114,15 +114,15 @@ function Main {
         if (($connection.State -eq "Open") -or ($Configuration.DBType -eq "CSV")) {
             # Execute DB query
             if ($connection.State -eq "Open") {
-                $dbEntityArray = @(ExecuteQuery -connection $connection -query $Configuration.query)
+                $dbEntityMap = ConvertToEntityMap -rows @(ExecuteQuery -connection $connection -query $Configuration.query)
             }
             elseif ($Configuration.DBType -eq "CSV") {
-                $dbEntityArray = @(ReadCSVFile)
+                $dbEntityMap = ConvertToEntityMap -rows @(ReadCSVFile)
             }
 
-            if ($dbEntityArray.count -gt 0) {
+            if ($dbEntityMap.Count -gt 0) {
                 # For every row of the data source
-                foreach ($row in $dbEntityArray) {
+                foreach ($row in $dbEntityMap.Values) {
                     if (!$Configuration.noBatching) {
                         # Use batching
                         Write-Log -level 3 -logtext ("Upserting business objects entity: " + $row.($Configuration.entityKey))
@@ -153,7 +153,7 @@ function Main {
                 if ($Configuration.deleteNonExistingEntities) {
                     Write-Log -level 0 -logtext ("Deleting non existing entities in business objects ...")
 
-                    DeleteNonExistingEntities(GetEntities($authSessionID, $null))
+                    DeleteNonExistingEntities
 
                     # Cleanup batch list
                     if ((-not $Configuration.noBatching) -and $BatchingListDelete.Count -gt 0) {
@@ -203,18 +203,29 @@ function IdpAuth {
 }
 
 #--------------
-function DeleteNonExistingEntities($entities) {
-    # Build a case-insensitive lookup of database keys
-    $dbKeys = New-Object "System.Collections.Generic.HashSet[string]" ([System.StringComparer]::OrdinalIgnoreCase)
-    foreach ($dbEntity in $dbEntityArray) {
-        [void] $dbKeys.Add([STRING] $dbEntity.($Configuration.entityKey))
+function ConvertToEntityMap($rows) {
+    $map = New-Object "System.Collections.Generic.Dictionary[string,object]" ([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($row in $rows) {
+        $key = [STRING] $row.($Configuration.entityKey)
+        if ($map.ContainsKey($key)) {
+            Write-Log -level 1 -logtext ("Duplicate key '$key' in data source. The last entry is used.")
+        }
+        $map[$key] = $row
     }
 
+    return , $map
+}
+
+#--------------
+function DeleteNonExistingEntities {
+    $entities = GetEntities -authSessionID $authSessionID -nextLink $null
+
+    # If "$entities" is "null": condition evaluates to false (no runtime error)
     while ($entities.value.count -gt 0) {
         foreach ($businessobjectsEntity in $entities.value) {
             $key = $businessobjectsEntity.($Configuration.entityKey)
 
-            if ($dbKeys.Contains([STRING] $key)) {
+            if ($dbEntityMap.ContainsKey([STRING] $key)) {
                 Write-Log -level 3 -logtext ("Business Objects entity with key: $key exists in Database")
             }
             else {
